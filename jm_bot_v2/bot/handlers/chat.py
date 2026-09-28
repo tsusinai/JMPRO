@@ -46,6 +46,12 @@ async def cmd_ask(group_id: int, message: str, reply_msg_id: int):
     from ..handlers.browse import execute_action
     from ..handlers.download import cmd_download
 
+    # 风控节流：同群冷却 + 全局每分钟上限（超限时静默跳过，不回复）
+    from ..antiban import check_ai_allowed
+    if not check_ai_allowed(group_id):
+        logger.info(f"AI 回复限频跳过 (群 {group_id})")
+        return
+
     logger.info(f"AI 聊天 (群 {group_id}): {message[:50]}...")
 
     try:

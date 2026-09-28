@@ -6,6 +6,7 @@ import logging
 import os
 
 from . import napcat
+from . import antiban
 from .roles import apply_role
 from . import tts as tts_mod
 
@@ -13,10 +14,12 @@ logger = logging.getLogger("jm_bot")
 
 
 def send_group_msg(group_id: int, text: str) -> bool:
+    antiban.throttle_send()
     return napcat.send_group_msg(group_id, apply_role(text, group_id))
 
 
 def send_group_reply(group_id: int, text: str, reply_msg_id: int) -> bool:
+    antiban.throttle_send()
     return napcat.send_group_reply(group_id, apply_role(text, group_id), reply_msg_id)
 
 
@@ -35,6 +38,7 @@ def send_group_voice(group_id: int, text: str, reply_msg_id: int, role_id: int =
         path = None
     if not path or not os.path.exists(path):
         return send_group_reply(group_id, text, reply_msg_id)
+    antiban.throttle_send()
     ok = napcat.send_group_msg(group_id, _voice_record_msg(path))
     if not ok:
         logger.warning("语音发送失败，回退文本")

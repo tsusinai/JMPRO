@@ -41,5 +41,10 @@
     "async_timeout_seconds": 120,
     "async_poll_seconds": 4,
     "default_voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d"
+  },
+  "antiban": {
+    "min_send_interval_seconds": 1.2,
+    "ai_cooldown_seconds": 8,
+    "ai_max_per_minute": 10
   }
 }

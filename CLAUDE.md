@@ -338,6 +338,8 @@ ssh jmbot "cd /home/admin/.astrbot/data/plugins && sudo tar -xvf /tmp/plugin_pag
 
 ## 修改注意事项
 
+- jm_bot_v2 已内置风控节流（bot/antiban.py）：出站消息全局最小间隔 1.2s（messaging 层）、AI 聊天同群冷却 8s + 全局 10 条/分钟；阈值在 jm_bot_v2/config.json "antiban" 段。旧号因机房 IP 被风控，新号 2143388598 使用需保持节流 + 低频养号（避免频繁重启 napcat、避免色色内容高频直发）
+
 - companion 配置有两处重复 (basic_config + 顶层), 用 replace_all 确保同步
 - JSON 配置文件带 BOM, Python 读写需 `utf-8-sig`
 - 用户名 `a'su's` 含单引号, shell 命令中路径需特殊处理

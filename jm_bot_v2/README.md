@@ -28,7 +28,9 @@ bot/
     chat.py        ask/ask clear/role
     misc.py        help/restart（软重启）
   napcat.py        NapCat OneBot HTTP API（底层）
-  messaging.py     消息发送门面（统一注入角色口吻）
+  messaging.py     消息发送门面（统一注入角色口吻 + 发送节流）
+  antiban.py       风控节流：出站消息全局最小间隔 + AI 回复限频（同群冷却/每分钟上限）
+  tts.py           TTS（vocu 主引擎：同步直出→免费计划自动降级异步；siliconflow 备选）
   roles.py         7 人设角色系统 + group_roles.json
   ai_chat.py       /jm ask（意图分类 → 执行 → 猫娘回复）+ chat_history.json
   jm_client.py     JMComic 客户端单例 + CDN 域名扩展 + 查询域逻辑

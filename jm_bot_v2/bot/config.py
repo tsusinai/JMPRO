@@ -45,6 +45,11 @@ DEFAULTS = {
         "async_poll_seconds": 4,
         "default_voice_id": "",
     },
+    "antiban": {
+        "min_send_interval_seconds": 1.2,
+        "ai_cooldown_seconds": 8,
+        "ai_max_per_minute": 10
+    },
 }
 
 
@@ -119,3 +124,9 @@ TTS_MAX_CHARS = CONFIG["tts"]["max_chars"]
 TTS_ASYNC_TIMEOUT_SECONDS = CONFIG["tts"]["async_timeout_seconds"]
 TTS_ASYNC_POLL_SECONDS = CONFIG["tts"]["async_poll_seconds"]
 TTS_DEFAULT_VOICE_ID = CONFIG["tts"]["default_voice_id"]
+
+# === 风控节流 ===
+_AB = CONFIG["antiban"]
+ANTIBAN_MIN_SEND_INTERVAL = _AB["min_send_interval_seconds"]
+ANTIBAN_AI_COOLDOWN_SECONDS = _AB["ai_cooldown_seconds"]
+ANTIBAN_AI_MAX_PER_MINUTE = _AB["ai_max_per_minute"]
