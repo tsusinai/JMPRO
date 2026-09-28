@@ -342,6 +342,8 @@ ssh jmbot "cd /home/admin/.astrbot/data/plugins && sudo tar -xvf /tmp/plugin_pag
 
 ## 修改注意事项
 
+- **jmcomic 插件已恢复启用（2026-09-28）**：从 disabled_plugins 移回。uv 升级重建 venv 后插件依赖丢失需重装：`~/.local/bin/uv pip install --python ~/.local/share/uv/tools/astrbot/bin/python jmcomic img2pdf -i https://pypi.tuna.tsinghua.edu.cn/simple`。实测该服务器**可直连 JM API 与图片 CDN**（搜索/单图下载均通，无需 GoodbyeDPI/隧道）；整本下载耗时数分钟属正常，插件有进度通知。风控注意：色色内容从机房 IP 高频发送有风险，已在群聊插话限额内平衡
+
 - **群聊插话已开启（2026-09-28）**：private_companion 配置 `enable_group_interjection=True`（原为 False，闲聊从不搭话的主因）、插话最小间隔 6→3 分钟、关系插话额度放宽（窗口 10min/3 次、每人日 12、群日 60），插话反馈学习开。备份：`/home/admin/companion_config_backup_20260928.json`。配置修改必须同步顶层+`group_interject_config`+`basic_config` 三处重复键。嫌插话频繁调大 `group_interject_min_interval_minutes`，嫌少调小
 
 - jm_bot_v2 已内置风控节流（bot/antiban.py）：出站消息全局最小间隔 1.2s（messaging 层）、AI 聊天同群冷却 8s + 全局 10 条/分钟；阈值在 jm_bot_v2/config.json "antiban" 段。旧号因机房 IP 被风控，新号 2143388598 使用需保持节流 + 低频养号（避免频繁重启 napcat、避免色色内容高频直发）
