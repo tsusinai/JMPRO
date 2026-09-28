@@ -370,12 +370,12 @@ _M = {
         "诶？主人这个命令本喵不太明白... /jm help 可以查看人家支持的所有玩法哦~",
     ],
     "help_main": [
-        "✨ 本喵调教指南 ✨\n\n  0️⃣ AI 聊天 — /jm help 0\n  1️⃣ 下载 — /jm help 1\n  2️⃣ 发现 — /jm help 2\n  3️⃣ 管理 — /jm help 3\n  🎭 /jm role — 切换人设\n\n回复 /jm help <数字> 查看详情哦~",
-        "✨ 想把本喵玩弄于股掌？\n\n  0️⃣ AI 聊天 — /jm help 0\n  1️⃣ 下载 — /jm help 1\n  2️⃣ 发现 — /jm help 2\n  3️⃣ 管理 — /jm help 3\n  🎭 /jm role — 切换人设\n\n回复 /jm help <数字> 了解人家的全部秘密~",
+        "✨ 本喵调教指南 ✨\n\n  0️⃣ AI 聊天 — /jm help 0\n  1️⃣ 下载 — /jm help 1\n  2️⃣ 发现 — /jm help 2\n  3️⃣ 管理 — /jm help 3\n  🎭 /jm role — 切换人设\n  🎙️ /jm voice — 语音模式\n\n回复 /jm help <数字> 查看详情哦~",
+        "✨ 想把本喵玩弄于股掌？\n\n  0️⃣ AI 聊天 — /jm help 0\n  1️⃣ 下载 — /jm help 1\n  2️⃣ 发现 — /jm help 2\n  3️⃣ 管理 — /jm help 3\n  🎭 /jm role — 切换人设\n  🎙️ /jm voice — 让本喵说话\n\n回复 /jm help <数字> 了解人家的全部秘密~",
     ],
     "help_ask": [
-        "🤖 AI 聊天\n\n/jm ask <你想要的>             自然语言交互\n  例: /jm ask 帮我搜电锯人\n  例: /jm ask 最近什么最火\n  例: /jm ask 看看123456\n  例: /jm ask 有没有无修正的\n  例: /jm ask 随便来一本\n/jm role                      查看可切换的人设\n/jm role <数字>                 切换聊天人设\n\n本喵会用 AI 理解你的意思，自动搜索/排行/推荐哦~\n\n回复 /jm help 回到主菜单",
-        "🤖 跟本喵聊天~\n\n/jm ask <想做的事>\n  例: /jm ask 帮我找电锯人\n  例: /jm ask 最近什么最火\n  例: /jm ask 看看123456\n  例: /jm ask 有没有全彩的\n  例: /jm ask 随便推荐一本\n/jm role                      查看可切换的人设\n/jm role <数字>                 切换聊天人设\n\n主人不用打复杂命令，用自然语言就能命令本喵！\n\n回复 /jm help 回到主菜单",
+        "🤖 AI 聊天\n\n/jm ask <你想要的>             自然语言交互\n  例: /jm ask 帮我搜电锯人\n  例: /jm ask 最近什么最火\n  例: /jm ask 看看123456\n  例: /jm ask 有没有无修正的\n  例: /jm ask 随便来一本\n/jm role                      查看可切换的人设\n/jm role <数字>                 切换聊天人设\n/jm voice on                  开启语音模式（聊天回复变语音）\n/jm voice off                 关闭语音模式\n/jm voice status              查看语音模式状态\n\n本喵会用 AI 理解你的意思，自动搜索/排行/推荐哦~\n语音模式下聊天回复会变成语音，搜索下载还是文字的喵~\n\n回复 /jm help 回到主菜单",
+        "🤖 跟本喵聊天~\n\n/jm ask <想做的事>\n  例: /jm ask 帮我找电锯人\n  例: /jm ask 最近什么最火\n  例: /jm ask 看看123456\n  例: /jm ask 有没有全彩的\n  例: /jm ask 随便推荐一本\n/jm role                      查看可切换的人设\n/jm role <数字>                 切换聊天人设\n/jm voice on                  让本喵开口说话（聊天变语音）\n/jm voice off                 恢复纯文字\n/jm voice status              看看现在开没开\n\n主人不用打复杂命令，用自然语言就能命令本喵！\n开启语音后本喵的聊天都会用声音回复人家~\n\n回复 /jm help 回到主菜单",
     ],
     "help_download": [
         "📥 下载\n\n/jm download <ID> [pdf|zip]  下载漫画\n/jm <ID>                    同上\n/jm download <ID1> <ID2>    一次多个\n/jm queue                   查看队列\n/jm stop                    停止\n\n回复 /jm help 回到主菜单",
@@ -386,9 +386,9 @@ _M = {
         "🔍 发掘新宝藏\n\n/jm search <关键词>           搜\n/jm category <标签>           按标签\n/jm info <ID>                 详情\n/jm rank [day|week|month]     排行榜\n/jm random                    闭眼摸一本\n/jm random --tag <标签>        指定口味\n\n回复 /jm help 回到主菜单",
     ],
     "help_manage": [
-        "⚙️ 管理\n\n/jm cache                    看看存货\n/jm cache clean [天数]        清理旧东西（默认7天）\n/jm restart                  本喵洗澡\n/jm role [数字]               切换人设\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
-        "⚙️ 管理工具箱\n\n/jm cache                    看看存货\n/jm cache clean [天数]        清理旧东西\n/jm restart                  本喵洗澡\n/jm role [数字]               切换人设\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
-        "⚙️ 帮本喵清理身体~\n\n/jm cache                    肚子多大\n/jm cache clean [天数]        清清旧东西\n/jm restart                  洗澡重启\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
+        "⚙️ 管理\n\n/jm voice [on|off]            语音模式开关\n/jm cache                    看看存货\n/jm cache clean [天数]        清理旧东西（默认7天）\n/jm restart                  本喵洗澡\n/jm role [数字]               切换人设\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
+        "⚙️ 管理工具箱\n\n/jm voice [on|off]            语音模式开关\n/jm cache                    看看存货\n/jm cache clean [天数]        清理旧东西\n/jm restart                  本喵洗澡\n/jm role [数字]               切换人设\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
+        "⚙️ 帮本喵清理身体~\n\n/jm voice [on|off]            语音模式开关\n/jm cache                    肚子多大\n/jm cache clean [天数]        清清旧东西\n/jm restart                  洗澡重启\n/jm help [数字]               本菜单\n\n回复 /jm help 回到主菜单",
     ],
 }
 
