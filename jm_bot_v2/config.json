@@ -34,7 +34,7 @@
   },
   "tts": {
     "engine": "vocu",
-    "api_key": "",
+    "api_key": "sk-1c34ef5a2dd3fb8fb05bdf39404516e8",
     "model": "FunAudioLLM/CosyVoice2-0.5B",
     "timeout_seconds": 30,
     "max_chars": 300,
