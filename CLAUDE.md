@@ -4,18 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-JM 漫画 QQ Bot — QQ 群/私聊 AI 猫娘 Bot。基于 AstrBot v4.26.6 + 11 插件。支持漫画下载/搜索、B站视频解析、AI聊天、图片识图、知识库。
+JM 漫画 QQ Bot — QQ 群/私聊 AI 猫娘 Bot。基于 AstrBot v4.28.2 + 插件。支持漫画下载/搜索、B站视频解析、AI聊天、图片识图、知识库。
+
+> 2026-09-28 已从 v4.26.6 升级至 v4.28.2（uv tool 安装，备份 ~/astrbot_backup_v4.26.6_20260928_1830.tar.gz）。QQ 号风控后服务器切换到 QQ 官方 bot 通道（qq_official），aiocqhttp/NapCat 通道已禁用；jm 漫画功能由 Windows 本机独立 Bot（根目录 / jm_bot_v2）承担，服务器 jm 相关插件已停用。
 
 ## 架构 (2026-07-17)
 
 **服务器** (118.31.184.221, 阿里云 2核4G, Anolis OS 8 / Alibaba Cloud Linux 3):
 ```
-QQ Linux(3.2.31) → NapCat Shell(v4.18.9, LD_PRELOAD) → AstrBot v4.26.6 (:6185, :3003)
+QQ Linux(3.2.31) → NapCat Shell(v4.18.28, LD_PRELOAD) → AstrBot v4.28.2 (:6185, :3003)
   ├─ WS Server(3001) → napcat_ws_bridge.py (群聊识图)
   ├─ HTTP Server(3002) ← AstrBot 发送消息
   └─ WebUI(6099) — NapCat 管理界面
 
 systemd 持久化: napcat.service → astrbot.service → bridge.service
+
+> 2026-09-28: AstrBot 升级 v4.26.6→v4.28.2（备份 ~/astrbot_backup_v4.26.6_20260928_1830.tar.gz）；
+> NapCat 升级 v4.18.9→v4.18.28（备份 ~/napcat_backup_v4.18.28_pre，配置备份 ~/napcat_config_backup_20260928.tar.gz）。
+> QQ 换新号 **2143388598**（旧号 1601410002 风控弃用；快速登录列表仅剩旧号，新号依赖 QQ 本地登录态自动登录，重启后若掉线需扫码）。
+> aiocqhttp 桥接已重新启用（此前 qq_official 通道期间 aiocqhttp 曾 enable:false），NapCat → 3003 连接正常，群消息实时流入。
+> NapCat WebUI v4.18.28 登录 API 变化：POST /api/auth/login body 为 {hash: SHA256(token+".napcat"), totpCode:""}，返回 data.Credential；QR 接口 GetQQLoginQRcode 返回解码 URL 而非图片。
 ```
 
 **Windows 本机**: GoodbyeDPI (JMComic CDN 翻墙), 开发/测试
@@ -110,7 +118,7 @@ ssh jmbot "base64 /home/admin/.astrbot/data/napcat/cache/qrcode.png" > qr.b64 &&
 journalctl -u napcat --no-pager | grep "二维码解码URL"
 ```
 
-扫码账号: **1601410002**（注意不要扫错！）
+扫码账号: **2143388598**（2026-09-28 起启用；旧号 1601410002 已弃用）
 
 ### 端口一览
 
@@ -209,22 +217,19 @@ scp -r knowledge_base/* jmbot:/home/admin/.astrbot/data/knowledge_base/
 
 ## 插件系统
 
-### 插件清单 (2026-07-17)
+### 插件清单 (2026-09-28 实测)
 
-| 插件 | 版本 | 状态 | 说明 |
-|------|------|------|------|
-| private_companion | 5.9.10 | ✅ | 陪伴/生图/识图/主动私聊 |
-| memory_companion | 1.6.0 | ✅ | 长期记忆/知识图谱 |
-| jmcomic | 1.0.0 | ✅ | 漫画下载/搜索/推荐 |
-| smart_imagechat_hub | 2.8.6 | ✅ | 表情包/智能图片对话 |
-| Bilibili-Full-Featured | 1.2.0 | ✅ | B站全能解析 |
-| bilibili (旧) | 1.6.4 | ✅ | BV关, mini-app开 |
-| polite_silence | 1.1.0 | ✅ | 骚扰拒答 |
-| STEmbedding | 1.2.4 | 备用 | 本地嵌入模型 |
-| AstrNa | 1.4.6 | ✅ | 系统优化 |
-| fund | 1.0.0 | ✅ | 基金查询 |
-| biliread | 1.2.0 | ✅ | B站视频理解 |
-| iris_chat_memory | — | ❌ 已删 | 已迁移到 memory_companion |
+QQ 风控换号后插件已大幅精简，**当前启用**：
+
+| 插件 | 说明 |
+|------|------|
+| astrbot_plugin_AstrNa | 系统优化 |
+| astrbot_plugin_changsha_travel | 长沙旅游 |
+| astrbot_plugin_exa_web_search | Exa 联网搜索（未配 API Key） |
+| astrbot_plugin_polite_silence | 骚扰拒答 |
+| builtin_commands / astrbot | 内置 |
+
+**已停用**（在 `data/plugins/disabled_plugins/`，QQ 风控后停用，jm 功能改由 Windows 本机独立 Bot 承担）：jmcomic、private_companion、memory_companion、smart_imagechat_hub、Bilibili-Full-Featured、bilibili、biliread、fund、STEmbedding。
 
 ### 插件页面 (Plugin Pages)
 
