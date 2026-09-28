@@ -1,0 +1,15 @@
+{
+  "api_base": "https://uapis.cn/api/v1/social/bilibili",
+  "enable_parsing": true,
+  "auto_summary": true,
+  "whitelist": [],
+  "notify_enable": false,
+  "notify_interval": 60,
+  "notify_whitelist": [],
+  "notify_live_enable": true,
+  "notify_dynamic_enable": true,
+  "notify_archive_enable": true,
+  "notify_dynamic_rsshub_base": "",
+  "notify_ai_enable": true,
+  "notify_ai_max_chars": 80
+}

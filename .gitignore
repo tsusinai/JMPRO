@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.log
+downloads/
+pdfs/
+zips/
+chat_history.json
+rate_limits.json
+group_roles.json
+download_errors.log
+.claude/
+qq_qrcode*.png
+qq_qrcode*.b64
+test_plan_*.png
+test_route_map.png
+bot.log

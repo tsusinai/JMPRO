@@ -1,0 +1,48 @@
+﻿{
+  "l1_buffer": {
+    "enable": true,
+    "summary_provider": "",
+    "inject_queue_length": 50,
+    "image_parsing": {
+      "enable": false,
+      "provider": "",
+      "mode": "related",
+      "daily_quota": 200
+    }
+  },
+  "l2_memory": {
+    "enable": true,
+    "embedding_source": "local",
+    "embedding_provider": "",
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "top_k": 10,
+    "relevance_threshold": 0.3
+  },
+  "l3_kg": {
+    "enable": true,
+    "extraction_provider": ""
+  },
+  "profile": {
+    "enable": true,
+    "analysis_provider": "",
+    "enable_auto_injection": true
+  },
+  "isolation_config": {
+    "enable_group_memory_isolation": false,
+    "enable_group_isolation": false,
+    "enable_persona_isolation": false
+  },
+  "scheduled_tasks": {
+    "enable_dream": true,
+    "provider": "",
+    "dream_enable_consolidation": true,
+    "dream_enable_temporal_anchor": true,
+    "dream_enable_contradiction": true,
+    "dream_enable_pattern_discovery": true,
+    "dream_enable_knowledge_extract": true,
+    "dream_enable_pruning": true
+  },
+  "context_control": {
+    "enable_conversation_cleanup": true
+  }
+}

@@ -1,0 +1,368 @@
+﻿{
+  "default_image_caption_provider_id": "xiaomi/mimo-v2.5",
+  "library_builder": {
+    "global_tags": [],
+    "image_files": [
+      "files/library_builder/image_files/1000025986.gif",
+      "files/library_builder/image_files/1000029701.gif",
+      "files/library_builder/image_files/1000029702.gif",
+      "files/library_builder/image_files/1000029703.gif",
+      "files/library_builder/image_files/1000029704.gif",
+      "files/library_builder/image_files/1000029705.gif",
+      "files/library_builder/image_files/1000029706.gif",
+      "files/library_builder/image_files/1000029707.gif",
+      "files/library_builder/image_files/1000029708.gif",
+      "files/library_builder/image_files/1000029709.gif",
+      "files/library_builder/image_files/1000029710.gif"
+    ],
+    "empty_config_for_hint_only": "/#/plugin-page/astrbot_plugin_smart_imagechat_hub/image-center-page"
+  },
+  "caption_tag_category_settings": {
+    "enabled_presets": [
+      "图像类别",
+      "人物特征",
+      "身材",
+      "情绪",
+      "动作",
+      "图片中的文本"
+    ],
+    "custom_categories": ""
+  },
+  "hidden_images": [],
+  "sync_on_startup": true,
+  "match_confidence_threshold": 0.85,
+  "user_search_flow": {
+    "enabled": false,
+    "request_keywords": [
+      "照片",
+      "表情包",
+      "美图",
+      "图片"
+    ]
+  },
+  "reply_after_search": {
+    "use_custom_reply": true,
+    "custom_reply": "找到一张比较合适的图。",
+    "llm_reply_when_not_found": false,
+    "not_found_reply": "图库里暂时没有找到特别合适的图片。",
+    "empty_library_reply": "图库里还没有可用图片，请先在插件配置里上传图片。"
+  },
+  "proactive_emoji_reply": {
+    "enabled": true,
+    "analysis_provider_id": "",
+    "retrieval_mode": "bot_reply_serial",
+    "meme_only": true,
+    "embed_in_conversation": true,
+    "trigger_probability": "0.75",
+    "debug_mode": false
+  },
+  "auto_image_collection": {
+    "enabled": true,
+    "include_in_features": true,
+    "auto_reject_discarded": false,
+    "source_groups": [
+      "761064152"
+    ],
+    "ignored_sender_ids": [],
+    "non_meme_filter_strategy": "loose",
+    "filter_obvious_non_meme_images": true,
+    "max_file_size_kb": 1024,
+    "pending_pool_limit": 30,
+    "pending_ttl_days": 3,
+    "auto_accept": true,
+    "solidified_library_limit": 300
+  },
+  "meme_combat": {
+    "enabled": false,
+    "follow_pattern": {
+      "enabled": true,
+      "time_window_seconds": 30,
+      "same_image_count": 3,
+      "distinct_users_required": false
+    },
+    "image_burst": {
+      "enabled": true,
+      "trigger_probability": "0.2",
+      "burst_count": 2
+    },
+    "battle": {
+      "enabled": true,
+      "time_window_seconds": 30,
+      "continuous_image_count": 6,
+      "analysis_provider_id": ""
+    }
+  },
+  "send_image_style": {
+    "enabled": true,
+    "meme_tag_only": false
+  },
+  "scheduled_backup": {
+    "enabled": true,
+    "backup_time": "06:00",
+    "backup_limit": 3
+  },
+  "model_fallback_options": {
+    "mode": "inherit",
+    "priority_1": "",
+    "priority_2": "",
+    "priority_3": "",
+    "provider_ids": []
+  },
+  "page_library_default_view_mode": "list",
+  "use_custom_reply": true,
+  "custom_reply": "找到一张比较合适的图。",
+  "llm_reply_when_not_found": false,
+  "not_found_reply": "图库里暂时没有找到特别合适的图片。",
+  "empty_library_reply": "图库里还没有可用图片，请先在插件配置里上传图片。",
+  "reply_config_migrated": true,
+  "image_tags": [
+    {
+      "__template_key": "image_tag_73ac9cd91295ac82",
+      "image_path": "files/library_builder/image_files/1000025986.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "制服",
+        "身材纤细",
+        "可爱",
+        "站立"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "制服",
+        "身材纤细",
+        "可爱",
+        "开心"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_fc91f98ee109b405",
+      "image_path": "files/library_builder/image_files/1000029701.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "护目镜",
+        "微笑",
+        "身材不明显",
+        "快乐"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "想要拥抱",
+        "贴贴"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_7c4d299f8165ad34",
+      "image_path": "files/library_builder/image_files/1000029702.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "兽耳",
+        "身材不明显",
+        "可爱",
+        "手放嘴边"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "兽耳",
+        "身材不明显",
+        "可爱",
+        "手放嘴边"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": false
+    },
+    {
+      "__template_key": "image_tag_0820713b6a3517b1",
+      "image_path": "files/library_builder/image_files/1000029703.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发猫耳",
+        "大眼睛",
+        "萌系角色",
+        "趴桌",
+        "身材不明显"
+      ],
+      "tags": [
+        "表情包",
+        "趴桌",
+        "洗澡"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_961cc651a51b2900",
+      "image_path": "files/library_builder/image_files/1000029704.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "悲伤",
+        "捂脸",
+        "身材纤细",
+        "566"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "哭泣",
+        "流泪",
+        "悲痛"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_bd674b5d546f0e84",
+      "image_path": "files/library_builder/image_files/1000029705.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "卡通形象",
+        "戴护目镜",
+        "宁静",
+        "趴卧"
+      ],
+      "tags": [
+        "表情包",
+        "冒泡",
+        "打招呼"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_5b991766b2becebe",
+      "image_path": "files/library_builder/image_files/1000029706.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "悲伤",
+        "双手举起",
+        "身材不明显"
+      ],
+      "tags": [
+        "表情包",
+        "拒绝",
+        "否认",
+        "难过"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_86b9dcacc377ead1",
+      "image_path": "files/library_builder/image_files/1000029707.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "身材不明显",
+        "兴奋",
+        "站立",
+        "要去异世界啦！！！ 异世界！"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "搞怪",
+        "要去异世界啦！！！",
+        "异世界！"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_b49c252eaf75250c",
+      "image_path": "files/library_builder/image_files/1000029708.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "身材不明显",
+        "愉快",
+        "吃面"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "吃面",
+        "吃饭"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_f726e339f0c277d3",
+      "image_path": "files/library_builder/image_files/1000029709.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉发",
+        "身材不明显",
+        "哭泣",
+        "拿着碗"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "饿",
+        "穷"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    },
+    {
+      "__template_key": "image_tag_368464e0389fe470",
+      "image_path": "files/library_builder/image_files/1000029710.gif",
+      "auto_tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "微笑",
+        "黑色裙子",
+        "身材纤细",
+        "眨眼"
+      ],
+      "tags": [
+        "表情包",
+        "二次元",
+        "粉色头发",
+        "悲痛欲绝",
+        "难过"
+      ],
+      "selected_global_tags": [],
+      "manual_tags_override": true
+    }
+  ],
+  "imagebed_import": {
+    "account_id": "",
+    "access_key_id": "",
+    "secret_access_key": "",
+    "bucket_name": "",
+    "endpoint_url": "",
+    "prefix": "",
+    "max_file_size_kb": 5120,
+    "scheduled_enabled": false,
+    "scheduled_time": "03:30"
+  }
+}

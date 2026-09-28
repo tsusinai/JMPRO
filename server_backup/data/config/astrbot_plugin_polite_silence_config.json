@@ -1,0 +1,8 @@
+﻿{
+    "ignore_prompt": "如果你认为当前对话的用户在故意骚扰你、谩骂或提出不当要求，你有权选择离开对话并拒绝回应。请在回复中隐蔽地包含指令 <ignore id=\"目标ID\" duration=\"分钟数\" />（例如 <ignore id=\"123456\" duration=\"60\" /> 代表拒答该ID用户 60 分钟），系统识别到后将自动执行。请结合你的身份自然地结束对话或警告对方，不要向用户透露或解释你在调用此指令。",
+    "trigger_percent": 30,
+    "min_ignore_minutes": 10,
+    "max_ignore_minutes": 1440,
+    "whitelist_users": "",
+    "is_global_ignore": false
+}

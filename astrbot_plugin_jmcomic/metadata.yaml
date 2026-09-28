@@ -1,0 +1,9 @@
+name: jmcomic
+author: tsusinai
+version: 1.0.0
+desc: 禁漫天堂漫画下载/搜索/推荐 Bot
+short_desc: JMComic QQ Bot
+repo: https://github.com/tsusinai/astrbot-plugin-jmcomic
+support_platforms:
+  - aiocqhttp
+  - qq_official
