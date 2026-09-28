@@ -326,6 +326,8 @@ ssh jmbot "cd /home/admin/.astrbot/data/plugins && sudo tar -xvf /tmp/plugin_pag
 
 ## 已知问题
 
+- **插件面板 HTML 打不开（v4.28+）**：插件页面改为 JWT asset_token 鉴权（`/api/plugin/page/content/<plugin>/<page>/`，401 = 缺 token）。升级/重启后旧会话失效会导致面板加载失败，**重新登录 WebUI 即恢复**（前端重新拿 entry config 里的 asset_token）。private_companion v6.5.6"我会永远陪着你"陪伴面板曾遇到（2026-09-28，重登自愈）
+
 - GoodbyeDPI 需 Windows 保持运行 (JMComic CDN翻墙)
 - jmcomic 2.7.1 Feature.export_pdf 不工作 → 手动 img2pdf 兜底
 - 群聊识图依赖桥接稳定性
