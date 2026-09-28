@@ -326,6 +326,8 @@ ssh jmbot "cd /home/admin/.astrbot/data/plugins && sudo tar -xvf /tmp/plugin_pag
 
 ## 已知问题
 
+- **记忆插件库损坏已重建（2026-09-28）**：memory_companion"我会牢牢记住你"主库 evidence 列乱码 + 库文件物理损坏（malformed，历史 Windows→服务器迁移遗留），按用户指示删库重建（插件自动 init）。旧库备份：`/home/admin/mc_backup_20260928.db` + 插件目录 3 个 before-memory-atom-v2 备份。教训：跨平台迁移 SQLite 库文件必须 tar 打包
+
 - **插件面板 HTML 打不开（v4.28+）**：插件页面改为 JWT asset_token 鉴权（`/api/plugin/page/content/<plugin>/<page>/`，401 = 缺 token）。升级/重启后旧会话失效会导致面板加载失败，**重新登录 WebUI 即恢复**（前端重新拿 entry config 里的 asset_token）。private_companion v6.5.6"我会永远陪着你"陪伴面板曾遇到（2026-09-28，重登自愈）
 
 - GoodbyeDPI 需 Windows 保持运行 (JMComic CDN翻墙)
