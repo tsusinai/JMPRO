@@ -186,7 +186,13 @@ def _synth_vocu_async(text: str, voice_id: str):
         info = detail.json().get("data") or {}
         status = info.get("status")
         if status == "generated":
-            audio_url = info.get("audio") or info.get("audioUrl") or info.get("streamUrl")
+            # 实测 v1.vocu.ai：音频 URL 在 data.metadata.audio（contents[i].audio 同值）
+            audio_url = (
+                (info.get("metadata") or {}).get("audio")
+                or info.get("audio")
+                or info.get("audioUrl")
+                or info.get("streamUrl")
+            )
             if not audio_url:
                 return None, f"generated but no audio url: {json.dumps(info)[:200]}", False
             try:
