@@ -35,6 +35,16 @@ DEFAULTS = {
         "zip_seconds": 600,
     },
     "threads": {"download": 3, "io": 4, "api": 6},
+    "tts": {
+        "engine": "vocu",
+        "api_key": "",
+        "model": "FunAudioLLM/CosyVoice2-0.5B",
+        "timeout_seconds": 30,
+        "max_chars": 300,
+        "async_timeout_seconds": 120,
+        "async_poll_seconds": 4,
+        "default_voice_id": "",
+    },
 }
 
 
@@ -99,3 +109,13 @@ UPLOAD_TIMEOUT_ZIP = CONFIG["upload_timeout"]["zip_seconds"]
 THREAD_DOWNLOAD = CONFIG["threads"]["download"]
 THREAD_IO = CONFIG["threads"]["io"]
 THREAD_API = CONFIG["threads"]["api"]
+
+# === TTS ===
+TTS_ENGINE = CONFIG["tts"]["engine"]
+TTS_API_KEY = CONFIG["tts"]["api_key"]
+TTS_MODEL = CONFIG["tts"]["model"]
+TTS_TIMEOUT_SECONDS = CONFIG["tts"]["timeout_seconds"]
+TTS_MAX_CHARS = CONFIG["tts"]["max_chars"]
+TTS_ASYNC_TIMEOUT_SECONDS = CONFIG["tts"]["async_timeout_seconds"]
+TTS_ASYNC_POLL_SECONDS = CONFIG["tts"]["async_poll_seconds"]
+TTS_DEFAULT_VOICE_ID = CONFIG["tts"]["default_voice_id"]

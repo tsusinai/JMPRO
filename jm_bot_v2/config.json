@@ -31,5 +31,15 @@
     "download": 3,
     "io": 4,
     "api": 6
+  },
+  "tts": {
+    "engine": "vocu",
+    "api_key": "",
+    "model": "FunAudioLLM/CosyVoice2-0.5B",
+    "timeout_seconds": 30,
+    "max_chars": 300,
+    "async_timeout_seconds": 120,
+    "async_poll_seconds": 4,
+    "default_voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d"
   }
 }

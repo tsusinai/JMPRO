@@ -1,0 +1,13 @@
+{
+  "default_voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d",
+  "voices": {
+    "0": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "1": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "2": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "3": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "4": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "5": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""},
+    "6": {"voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d", "ref_audio": ""}
+  },
+  "_说明": "role_id 对应 bot/roles.py 的 ROLES 索引（0=郭大发隐藏 1=猫娘默认 2=傲娇 3=魅魔 4=大姐姐 5=病娇 6=痴女）。voice_id 为 Vocu 语音角色 ID（自建为 uuid，声音市场为 market:uuid）。ref_audio 留作重建音色/换引擎时使用，填本地参考音频相对路径。逐角色换音色时改对应 voice_id 即可。"
+}

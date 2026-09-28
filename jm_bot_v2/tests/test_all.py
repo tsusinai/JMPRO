@@ -804,6 +804,93 @@ def test_feature_import():
 
 
 # ============================================================
+# SECTION 6: TTS (bot.tts — preprocess / voices / mock synthesize)
+# ============================================================
+
+from bot import tts as tts_mod  # noqa: E402
+
+
+def test_tts_preprocess():
+    section("6a. tts.preprocess")
+
+    eq("tts pp strips qq tag", tts_mod.preprocess("你好[表情]呀"), "你好呀")
+    eq("tts pp strips emoji", tts_mod.preprocess("好可爱\U0001F63B喵"), "好可爱喵")
+    eq("tts pp strips md", tts_mod.preprocess("**重点**和_斜体_"), "重点和斜体")
+    true("tts pp keeps chinese", "本喵" in tts_mod.preprocess("本喵在呢"))
+    long = "喵" * 500
+    eq("tts pp truncates", len(tts_mod.preprocess(long)), 300)
+    eq("tts pp empty after strip", tts_mod.preprocess("[图片][表情]"), "")
+
+
+def test_tts_voices():
+    section("6b. tts.load_voices / resolve_voice")
+
+    voices = tts_mod.load_voices()
+    true("tts voices loaded", len(voices) >= 7)
+    true("tts voices role1 present", 1 in voices)
+    true("tts voices id nonempty", all(isinstance(v, str) and v for v in voices.values()))
+
+    # 已配置角色 → 表内音色；未配置角色 → default
+    v1 = tts_mod.resolve_voice(1)
+    true("tts resolve role1", isinstance(v1, str) and len(v1) > 0)
+    v_unknown = tts_mod.resolve_voice(999)
+    eq("tts resolve fallback default", v_unknown, tts_mod.resolve_voice(1))
+
+
+def test_tts_synthesize_mock():
+    section("6c. tts.synthesize (mock engine, no real API)")
+
+    saved_engine = dict(tts_mod._ENGINES)
+    saved_key = tts_mod.config.TTS_API_KEY
+    try:
+        tts_mod.config.TTS_API_KEY = "test-key"
+        calls = {"n": 0}
+
+        def fake_engine(text, voice_id):
+            calls["n"] += 1
+            return (b"ID3FAKEMP3", None)
+
+        tts_mod._ENGINES["vocu"] = fake_engine
+        tts_mod.config.TTS_ENGINE = "vocu"
+
+        # 清掉同名缓存避免历史干扰
+        import hashlib as _hl
+        vid = tts_mod.resolve_voice(1)
+        key = _hl.md5(f"{vid}|测试语音合成内容".encode("utf-8")).hexdigest()[:20]
+        cache_file = os.path.join(tts_mod.TTS_CACHE_DIR, f"{key}.mp3")
+        if os.path.exists(cache_file):
+            os.remove(cache_file)
+
+        path = tts_mod.synthesize("测试语音合成内容", 1)
+        true("tts mock synth returns path", path is not None and os.path.exists(path))
+        with open(path, "rb") as f:
+            eq("tts cache content", f.read(), b"ID3FAKEMP3")
+
+        # 第二次命中缓存，engine 不再被调用
+        path2 = tts_mod.synthesize("测试语音合成内容", 1)
+        eq("tts cache hit no re-call", calls["n"], 1)
+        eq("tts cache hit same path", path2, path)
+
+        # 引擎失败 → None
+        tts_mod._ENGINES["vocu"] = lambda t, v: (None, "boom")
+        eq("tts failure returns none", tts_mod.synthesize("另一次失败内容xyz", 1), None)
+
+        # 空文本 → None（不调引擎）
+        calls["n"] = 0
+        eq("tts empty text none", tts_mod.synthesize("[表情]", 1), None)
+        eq("tts empty text skips engine", calls["n"], 0)
+
+        # 未配置 key → None
+        tts_mod.config.TTS_API_KEY = ""
+        tts_mod._ENGINES["vocu"] = fake_engine
+        eq("tts no key none", tts_mod.synthesize("无Key内容abc", 1), None)
+    finally:
+        tts_mod._ENGINES.clear()
+        tts_mod._ENGINES.update(saved_engine)
+        tts_mod.config.TTS_API_KEY = saved_key
+
+
+# ============================================================
 # SECTION 5: Edge Cases
 # ============================================================
 
@@ -899,6 +986,11 @@ def main():
     test_find_album_dir()
     test_count_downloaded_files()
     test_feature_import()
+
+    # Section 6: TTS
+    test_tts_preprocess()
+    test_tts_voices()
+    test_tts_synthesize_mock()
 
     # Section 5: Edge cases
     test_edge_cases()

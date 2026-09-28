@@ -37,6 +37,7 @@ JM_ASK_RE = re.compile(r"^/jm\s+ask\s+(.+)$", re.DOTALL)
 JM_ASK_CLEAR_RE = re.compile(r"^/jm\s+ask\s+clear$")
 JM_QUEUE_RE = re.compile(r"^/jm\s+queue$")
 JM_ROLE_RE = re.compile(r"^/jm\s+role(?:\s+(\d))?$")
+JM_VOICE_RE = re.compile(r"^/jm\s+voice(?:\s+(on|off|status))?\s*$")
 
 
 async def safe_dispatch(group_id: int, raw_msg: str, reply_msg_id: int, is_private: bool = False):
@@ -106,6 +107,11 @@ async def dispatch(group_id: int, raw_msg: str, reply_msg_id: int):
     m = JM_ROLE_RE.match(raw_msg)
     if m:
         await chat.cmd_role(group_id, m.group(1), reply_msg_id)
+        return
+
+    m = JM_VOICE_RE.match(raw_msg)
+    if m:
+        await misc.cmd_voice(group_id, m.group(1) or "status", reply_msg_id)
         return
 
     if JM_ASK_CLEAR_RE.match(raw_msg):

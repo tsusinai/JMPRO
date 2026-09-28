@@ -67,6 +67,17 @@ async def cmd_ask(group_id: int, message: str, reply_msg_id: int):
         result = await asyncio.get_running_loop().run_in_executor(
             api_executor, group_chat, group_id, message
         )
+        if not result:
+            await io_call(send_group_reply, group_id, M("ask_error"), reply_msg_id)
+            return
+        # 语音模式：聊天回复转语音（数据类回复不受影响）；失败在 send_group_voice 内部回退文本
+        from ..handlers.misc import voice_mode_enabled
+        from ..messaging import send_group_voice
+        from ..roles import get_group_role as _ggr
+        if voice_mode_enabled(group_id):
+            role_id = _ggr(group_id)
+            await io_call(send_group_voice, group_id, result, reply_msg_id, role_id)
+            return
 
     elif act == "download":
         # 下载：回复确认后下发到 cmd_download 处理

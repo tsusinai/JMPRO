@@ -25,10 +25,21 @@ for lib in ["websockets", "urllib3", "asyncio", "requests"]:
     logging.getLogger(lib).setLevel(logging.WARNING)
 
 
+def ffmpeg_selfcheck():
+    """NapCat 把 mp3 转 silk 依赖 ffmpeg，缺失时语音功能不可用 — 启动时显眼提示"""
+    from bot.tts import check_ffmpeg
+    if not check_ffmpeg():
+        logging.getLogger("jm_bot").warning(
+            "⚠️ 未检测到 ffmpeg：NapCat 无法把语音转 silk，语音模式发送会失败"
+            "（本机安装后重启 Bot；NapCat 侧也需可用）"
+        )
+
+
 def main():
     # Windows 控制台 UTF-8
     if sys.platform == "win32":
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    ffmpeg_selfcheck()
     try:
         asyncio.run(run())
     except KeyboardInterrupt:
