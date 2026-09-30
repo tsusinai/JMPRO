@@ -2,16 +2,15 @@
 
 # 🐾 JM Bot v2
 
-### 模块化的 QQ 漫画助手
+###  QQ 漫画助手
 
-搜索 · 推荐 · 下载 · AI 对话 · 语音回复
+下载神秘代码 · LLM对话 · TTS语音
 
 [![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![OneBot v11](https://img.shields.io/badge/QQ-OneBot%20v11-12B7F5)](https://onebot.dev/)
 [![Windows](https://img.shields.io/badge/Platform-Windows-0078D4?logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Tests](https://img.shields.io/badge/tests-265%20passed-2ea44f)](#测试)
 
-一个轻量、可自托管的 QQ Bot：把 JMComic 的浏览与下载能力接入 NapCat，配合可选的 AI 和 TTS 服务完成自然交互。
 
 </div>
 
@@ -45,7 +44,7 @@ flowchart LR
 
 Bot 只处理 `/jm` 开头的消息。AI、TTS 和外部网络均为可选项；未配置密钥时，搜索、详情和下载仍可使用。
 
-## 🚀 30 秒启动
+## 🚀 原神启动
 
 ### 1. 准备
 
@@ -95,7 +94,7 @@ $env:ANTHROPIC_BASE_URL = "https://api.deepseek.com/anthropic"
 $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "服务商支持的模型名"
 ```
 
-## 💬 命令速查
+## 💬 一些没用的命令
 
 <details>
 <summary>展开全部命令</summary>
@@ -124,7 +123,7 @@ $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "服务商支持的模型名"
 
 </details>
 
-## 🔊 开启语音
+## 🔊 开启语音合成
 
 在 `config.json` 的 `tts` 段填写引擎和密钥，再把 `tts_voices.json` 中的占位音色 ID 换成自己的值：
 
@@ -201,13 +200,6 @@ python tests/test_all.py
 感谢所有贡献代码、文档、Issue、测试和反馈的开发者。第三方项目的许可证和使用条件以其官方仓库为准。
 
 ## 🔐 安全边界
-
-请勿提交以下内容：
-
-```text
-config.json · API Key · NapCat token · QQ 登录二维码
-chat_history.json · group_roles.json · 下载文件 · TTS 缓存
-```
 
 漫画、音频和第三方 API 按使用者自己的授权与服务条款使用。本仓库当前未声明独立开源许可证。
 
