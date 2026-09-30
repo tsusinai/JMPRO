@@ -44,7 +44,7 @@ flowchart LR
 
 Bot 只处理 `/jm` 开头的消息。AI、TTS 和外部网络均为可选项；未配置密钥时，搜索、详情和下载仍可使用。
 
-## 🚀 原神启动
+## 🚀 30 秒启动
 
 ### 1. 准备
 
@@ -52,6 +52,7 @@ Bot 只处理 `/jm` 开头的消息。AI、TTS 和外部网络均为可选项；
 - Python 3.14
 - 已登录并启用 OneBot v11 的 NapCat
 - 可访问 JMComic CDN 的网络环境
+- **不要求 GoodbyeDPI**；只有直连被网络环境干扰时，才按需启用
 
 ### 2. 安装
 
@@ -183,7 +184,7 @@ python tests/test_all.py
 
 - **没有回复**：确认 NapCat 已登录、端口和 token 一致，并检查 `bot.log`。
 - **WS 不断重连**：确认 OneBot v11 正向 WS 已开启，且只启动一个 Bot 实例。
-- **下载超时**：检查网络、`option.yml` 域名、证书和磁盘空间。
+- **下载超时**：先检查网络、`option.yml` 域名、证书和磁盘空间；直连失败时再尝试 GoodbyeDPI。
 - **AI 不可用**：检查 `ANTHROPIC_*` 环境变量，修改后重启进程。
 - **语音回退文字**：检查 TTS key、音色 ID 和 `ffmpeg`。
 
@@ -194,7 +195,7 @@ python tests/test_all.py
 - [JMComic-Crawler-Python](https://github.com/hect0x7/JMComic-Crawler-Python)：JMComic 查询与下载能力
 - [NapCatQQ](https://github.com/NapNeko/NapCatQQ)：QQ 协议端与 OneBot 接入
 - [OneBot 11](https://github.com/botuniverse/onebot-11)：事件模型与接口标准
-- [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI)：Windows 网络环境辅助工具
+- [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI)：可选的 Windows 网络环境辅助工具
 - [Python](https://github.com/python/cpython)、[Requests](https://github.com/psf/requests)、[websockets](https://github.com/python-websockets/websockets)、[img2pdf](https://github.com/josch/img2pdf)：运行时与文件处理基础
 
 感谢所有贡献代码、文档、Issue、测试和反馈的开发者。第三方项目的许可证和使用条件以其官方仓库为准。
