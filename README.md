@@ -16,7 +16,7 @@
 
 ---
 
-## ✨ 功能
+## ✨ 雷霆功能
 
 | | 能力 | 入口 |
 |:--:|---|---|
@@ -44,7 +44,7 @@ flowchart LR
 
 Bot 只处理 `/jm` 开头的消息。AI、TTS 和外部网络均为可选项；未配置密钥时，搜索、详情和下载仍可使用。
 
-## 🚀 30 秒启动
+## 🚀 原神启动
 
 ### 1. 准备
 
@@ -52,7 +52,6 @@ Bot 只处理 `/jm` 开头的消息。AI、TTS 和外部网络均为可选项；
 - Python 3.14
 - 已登录并启用 OneBot v11 的 NapCat
 - 可访问 JMComic CDN 的网络环境
-- **不要求 GoodbyeDPI**；只有直连被网络环境干扰时，才按需启用
 
 ### 2. 安装
 
@@ -87,7 +86,7 @@ Copy-Item config.example.json config.json
 /jm help
 ```
 
-AI 使用环境变量覆盖配置：
+AI 配置：
 
 ```powershell
 $env:ANTHROPIC_AUTH_TOKEN = "你的 API Key"
@@ -124,7 +123,7 @@ $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "服务商支持的模型名"
 
 </details>
 
-## 🔊 开启语音
+## 🔊 语音合成
 
 在 `config.json` 的 `tts` 段填写引擎和密钥，再把 `tts_voices.json` 中的占位音色 ID 换成自己的值：
 
