@@ -17,3 +17,31 @@ bot.log
 tts_cache/
 voice_modes.json
 qq_login_qr.png
+
+# Python 隔离环境与工具缓存
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 本机密钥配置（已跟踪文件仍需单独处理）
+.env
+.env.*
+!.env.example
+/jm_bot_v2/config.json
+
+# 私有服务器备份与运行数据库
+/server_backup/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# 登录二维码与临时产物
+napcat_qrcode*.png
+napcat_qrcode*.b64
+/test_tomori.mp3
+/nul
+*.tmp

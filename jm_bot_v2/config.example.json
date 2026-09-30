@@ -1,0 +1,50 @@
+{
+  "napcat": {
+    "http_url": "http://127.0.0.1:3002",
+    "ws_url": "ws://127.0.0.1:3001",
+    "access_token": ""
+  },
+  "ai": {
+    "api_key": "",
+    "base_url": "https://api.deepseek.com/anthropic",
+    "model": "deepseek-v4-flash"
+  },
+  "limits": {
+    "rate_group_seconds": 15,
+    "rate_global_seconds": 20,
+    "stop_cooldown_seconds": 5,
+    "api_timeout_seconds": 20,
+    "random_max_pages": 200,
+    "random_timeout_seconds": 30
+  },
+  "disk": {
+    "warn_mb": 500,
+    "critical_mb": 100
+  },
+  "upload_timeout": {
+    "pdf_base_seconds": 600,
+    "pdf_per_mb_seconds": 5,
+    "pdf_max_seconds": 1800,
+    "zip_seconds": 600
+  },
+  "threads": {
+    "download": 3,
+    "io": 4,
+    "api": 6
+  },
+  "tts": {
+    "engine": "vocu",
+    "api_key": "",
+    "model": "FunAudioLLM/CosyVoice2-0.5B",
+    "timeout_seconds": 30,
+    "max_chars": 300,
+    "async_timeout_seconds": 120,
+    "async_poll_seconds": 4,
+    "default_voice_id": ""
+  },
+  "antiban": {
+    "min_send_interval_seconds": 1.2,
+    "ai_cooldown_seconds": 8,
+    "ai_max_per_minute": 10
+  }
+}
