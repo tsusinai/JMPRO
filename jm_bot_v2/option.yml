@@ -1,0 +1,30 @@
+# JMComic 下载配置文件 v2
+# 更多配置项参考: https://github.com/hect0x7/JMComic-Crawler-Python
+
+# 下载目录规则
+dir_rule:
+  base_dir: "./downloads"
+
+# 客户端配置
+client:
+  domain:            # 2026-06-28 实测可用：cdnhjk.net(200), cdnplaystation6.cc(301)
+    - www.cdnhjk.net
+    - www.cdnplaystation6.cc
+  retry_times: 5      # 单域名重试次数（库默认值）
+  timeout: 30         # curl_cffi 可适当增加超时
+  postman:
+    type: requests    # requests 库可正常走 GoodbyeDPI 的 WinDivert 过滤
+
+# 下载选项
+download:
+  image:
+    suffix: .jpg
+    decode: true
+  threading:
+    photo: 2
+    image: 4
+  cache: true
+
+# 插件配置
+# 注: PDF/ZIP 输出通过 download_single 的 Feature 系统动态选择，不在此配置
+plugins: {}

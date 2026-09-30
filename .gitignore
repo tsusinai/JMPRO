@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+config.json
+chat_history.json
+rate_limits.json
+group_roles.json
+voice_modes.json
+tts_cache/
+downloads/
+pdfs/
+zips/
+*.log
+.env
+.env.*
+!.env.example

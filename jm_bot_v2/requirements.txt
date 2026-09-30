@@ -1,0 +1,8 @@
+# JM Bot v2 运行依赖（Windows 本机，Python 3.14）
+jmcomic==2.7.0
+websockets==16.0
+requests==2.34.2
+anthropic==0.112.0
+img2pdf==0.6.3
+certifi==2026.04.22
+certifi-win32  # 可选：老式 Windows 证书补丁，无包元数据故不锁版本

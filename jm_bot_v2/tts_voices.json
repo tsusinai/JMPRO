@@ -1,0 +1,34 @@
+{
+  "default_voice_id": "YOUR_VOCU_VOICE_ID",
+  "voices": {
+    "0": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "1": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "2": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "3": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "4": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "5": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    },
+    "6": {
+      "voice_id": "YOUR_VOCU_VOICE_ID",
+      "ref_audio": ""
+    }
+  },
+  "_说明": "role_id 对应 bot/roles.py。请在本机私有配置中替换 YOUR_VOCU_VOICE_ID；不要把真实音色 ID 或 API Key 提交到仓库。"
+}
