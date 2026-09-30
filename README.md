@@ -188,6 +188,18 @@ python tests/test_all.py
 - **AI 不可用**：检查 `ANTHROPIC_*` 环境变量，修改后重启进程。
 - **语音回退文字**：检查 TTS key、音色 ID 和 `ffmpeg`。
 
+## 🙏 开源鸣谢
+
+本项目的实现得益于以下开源项目与维护者：
+
+- [JMComic-Crawler-Python](https://github.com/hect0x7/JMComic-Crawler-Python)：JMComic 查询与下载能力
+- [NapCatQQ](https://github.com/NapNeko/NapCatQQ)：QQ 协议端与 OneBot 接入
+- [OneBot 11](https://github.com/botuniverse/onebot-11)：事件模型与接口标准
+- [GoodbyeDPI](https://github.com/ValdikSS/GoodbyeDPI)：Windows 网络环境辅助工具
+- [Python](https://github.com/python/cpython)、[Requests](https://github.com/psf/requests)、[websockets](https://github.com/python-websockets/websockets)、[img2pdf](https://github.com/josch/img2pdf)：运行时与文件处理基础
+
+感谢所有贡献代码、文档、Issue、测试和反馈的开发者。第三方项目的许可证和使用条件以其官方仓库为准。
+
 ## 🔐 安全边界
 
 请勿提交以下内容：
