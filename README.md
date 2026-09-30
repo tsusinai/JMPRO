@@ -4,7 +4,7 @@
 
 ###  QQ 漫画助手
 
-下载神秘代码 · LLM对话 · TTS语音
+搜索 · 推荐 · 下载 · AI 对话 · 语音回复
 
 [![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![OneBot v11](https://img.shields.io/badge/QQ-OneBot%20v11-12B7F5)](https://onebot.dev/)
@@ -95,7 +95,7 @@ $env:ANTHROPIC_BASE_URL = "https://api.deepseek.com/anthropic"
 $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "服务商支持的模型名"
 ```
 
-## 💬 一些没用的命令
+## 💬 命令速查
 
 <details>
 <summary>展开全部命令</summary>
@@ -124,7 +124,7 @@ $env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "服务商支持的模型名"
 
 </details>
 
-## 🔊 开启语音合成
+## 🔊 开启语音
 
 在 `config.json` 的 `tts` 段填写引擎和密钥，再把 `tts_voices.json` 中的占位音色 ID 换成自己的值：
 
