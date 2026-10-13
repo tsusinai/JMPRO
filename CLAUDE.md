@@ -10,7 +10,7 @@ JM 漫画 QQ Bot — QQ 群/私聊 AI 猫娘 Bot。基于 AstrBot v4.28.2 + 插�
 
 ## 架构 (2026-07-17)
 
-**服务器** (118.31.184.221, 阿里云 2核4G, Anolis OS 8 / Alibaba Cloud Linux 3):
+**服务器** (云服务器 2核4G, Linux):
 ```
 QQ Linux(3.2.31) → NapCat Shell(v4.18.28, LD_PRELOAD) → AstrBot v4.28.2 (:6185, :3003)
   ├─ WS Server(3001) → napcat_ws_bridge.py (群聊识图)
@@ -26,22 +26,38 @@ systemd 持久化: napcat.service → astrbot.service → bridge.service
 > NapCat WebUI v4.18.28 登录 API 变化：POST /api/auth/login body 为 {hash: SHA256(token+".napcat"), totpCode:""}，返回 data.Credential；QR 接口 GetQQLoginQRcode 返回解码 URL 而非图片。
 ```
 
-**Windows 本机**: GoodbyeDPI (JMComic CDN 翻墙), 开发/测试
+**Windows 本机**: GoodbyeDPI / 本地代理 (127.0.0.1:7892), 开发/测试
+  - `start_proxy_tunnel.bat`: 一键建立 SSH 反向代理隧道 (`10808` -> `127.0.0.1:7892`)，为云端 JMComic 加速
+  - `start_proxy_tunnel_silent.vbs`: 后台静默启动隧道
+  - `stop_proxy_tunnel.bat`: 停止反向代理隧道
+
+### JMComic 网络加速机制 (2026-09-28)
+- 服务器端 `astrbot_plugin_jmcomic` 支持**动态自适应代理**：
+  - 自动探测 `127.0.0.1:10808`（5秒防抖缓存）；
+  - 若连通：自动将 `JmOption` 注入本地隧道代理，漫画搜索/详情/下载全走本机代理加速；
+  - 若未连通/本机关机：无缝自动回退到原生直连，不阻断正常服务。
+
+### 高松灯 (Tomori) 专属音色 TTS 接入 (2026-09-28)
+- **音色模型**: 硅基流动 `FunAudioLLM/CosyVoice2-0.5B`，克隆音色 URI 为 `speech:tomori_v2:d9c9i8lsssvc73dqeta0:nlfkvwsaxnqotkhsvvld`（上传时必须带 Prompt Text 台词文本对齐）。
+- **AstrBot 配置**:
+  - Provider: `siliconflow/tomori_tts` (`type: "openai_tts_api"`)
+  - 全局配置: `provider_tts_settings.enable = true`, `dual_output = true` (双轨发送文字+语音), `trigger_probability = 1.0`。
+- **系统依赖**: 服务器通过 RPM Fusion 安装了 `ffmpeg 4.4.8`，用于将 TTS 生成的 wav 转换为 NapCat/QQ 所需的 silk 富媒体格式。
 
 ## SSH 连接
 
 ```bash
 # 本机 ~/.ssh/config:
 # Host jmbot
-#     HostName 118.31.184.221
+#     HostName <server_ip>
 #     User admin
 #     IdentityFile ~/.ssh/id_ed25519
 #     ServerAliveInterval 60
 
-ssh jmbot  # Claude Code 操作服务器
+ssh jmbot  # 操作服务器
 ```
 
-密钥路径: `C:\Users\a'su's\.ssh\id_ed25519` (ed25519, 2026-07-17 创建)
+密钥路径: `~/.ssh/id_ed25519` (ed25519)
 
 ## 启动 / 服务管理
 
@@ -73,12 +89,20 @@ journalctl -u astrbot --since "10 min ago"
 Type=simple
 User=root
 WorkingDirectory=/home/admin/.astrbot/data
-ExecStartPre=pkill -9 qq Xvfb; sleep 1
-ExecStartPre=Xvfb :1 -screen 0 1280x720x16 +extension GLX +render
-ExecStart=bash -c 'export DISPLAY=:1 && ./launcher.sh'
+ExecStartPre=/usr/bin/bash -c "pgrep -x Xvfb >/dev/null || (Xvfb :1 -screen 0 1280x720x16 +extension GLX +render > /dev/null 2>&1 & sleep 2)"
+ExecStart=/usr/bin/bash -c "export DISPLAY=:1 && ./launcher.sh"
+Environment=DISPLAY=:1
+Environment=NAPCAT_QUICK_ACCOUNT=2143388598
+KillMode=control-group
+TimeoutStopSec=15
+LimitNOFILE=65535
 Restart=always
 RestartSec=10
 ```
+
+> **内存与稳定性保护 (2026-09-28)**：
+> - 服务器 2G 内存无 Swap 导致此前频繁触发系统内核 OOM-Killer（强杀 QQ 与 AstrBot）。已配置 **2GB Swapfile** 并持久化（`/swapfile`，`vm.swappiness=10`）。
+> - NapCat 配置自动快速登录：`launcher.sh` 增加 `-q 2143388598`，`napcat.service` 注入 `NAPCAT_QUICK_ACCOUNT=2143388598`，`webui.json` 固化 `"autoLoginAccount": "2143388598"`，并在 `onebot11_2143388598.json` 中禁用了无效的 8080 Webhook 上报，防止重启后卡在等待扫码。
 
 ### AstrBot 服务详情
 
@@ -132,8 +156,8 @@ journalctl -u napcat --no-pager | grep "二维码解码URL"
 
 ### WebUI 访问
 
-- AstrBot: http://118.31.184.221:6185 (astrbot / Jm123456)
-- NapCat: http://118.31.184.221:6099 (token: e6fe235a1c03)
+- AstrBot: http://<server_ip>:6185 (账密详见服务器配置)
+- NapCat: http://<server_ip>:6099 (WebUI token 详见配置)
 
 ## 人格系统
 
@@ -273,6 +297,19 @@ ssh jmbot "cd /home/admin/.astrbot/data/plugins && sudo tar -xvf /tmp/plugin_pag
 | 识图/Vision (所有) | xiaomi/mimo-v2.5 | 图片理解 |
 | 嵌入/知识库 | siliconflow/bge-m3 | 免费 embedding |
 | 生图 | 百炼 wanx2.1-t2i-turbo | 图片生成 |
+| 语音合成 (TTS) | siliconflow/tomori_tts | FunAudioLLM/CosyVoice2-0.5B (高松灯专属音色克隆) |
+
+### 语音与人设指令规范 (2026-09-28)
+- **人设风格与口头禅**：
+  - 彻底删除语气词“喵”、“喵~”、“喵呜”及自称“本喵”（改为“我”）；
+  - 加入口头禅：“我操了老铁”，在日常闲聊、惊叹、吐槽时自然带出；
+  - 影响范围涵盖：`data_v4.db.personas`、`astrbot_plugin_private_companion_config.json` 及 `astrbot_plugin_jmcomic/agent_tools.py`。
+- **三种语音回复模式与指令**：
+  - 由 `astrbot_plugin_tts_switch` 插件接管，支持单群/单会话独立持久化配置：
+    - `1` / `/tts 1` / `/语音 1`：**仅语音**（回复仅发送语音，不附带文字）；
+    - `2` / `/tts 2` / `/语音 2`：**仅文字**（回复仅发送文字，不合成语音）；
+    - `3` / `/tts 3` / `/语音 3`：**两种都有**（双轨输出，既发文字又发语音）；
+    - `/tts global on/off`：全局 TTS 总开关控制。
 
 ## 核心配置文件
 

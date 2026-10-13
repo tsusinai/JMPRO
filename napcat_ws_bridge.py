@@ -18,11 +18,12 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [Bridge] %(message)s
 logger = logging.getLogger("napcat_bridge")
 
 # NapCat WS
-WS_URL = "ws://127.0.0.1:3001?access_token=O~3GVdp9kwlCH.Zg"
+NAPCAT_TOKEN = os.getenv("NAPCAT_ACCESS_TOKEN", "")
+WS_URL = os.getenv("NAPCAT_WS_URL", f"ws://127.0.0.1:3001?access_token={NAPCAT_TOKEN}")
 # AstrBot API
-ASTRBOT_API = "http://127.0.0.1:6185"
-ASTRBOT_USER = "astrbot"
-ASTRBOT_PASS = "Jm123456"
+ASTRBOT_API = os.getenv("ASTRBOT_API_URL", "http://127.0.0.1:6185")
+ASTRBOT_USER = os.getenv("ASTRBOT_USERNAME", "astrbot")
+ASTRBOT_PASS = os.getenv("ASTRBOT_PASSWORD", "")
 
 _token = None
 _token_expire = 0
@@ -126,7 +127,7 @@ async def handle_message(msg: dict):
                 image_hints.append(d)
     if image_hints:
         import base64 as _b64
-        napcat_token = "O~3GVdp9kwlCH.Zg"
+        napcat_token = os.getenv("NAPCAT_ACCESS_TOKEN", "")
         for i, img in enumerate(image_hints):
             img_data = img.get("data", {})
             img_url = img_data.get("url", "")
@@ -157,7 +158,7 @@ async def handle_message(msg: dict):
                     resp = requests.post(
                         "https://api.xiaomimimo.com/v1/chat/completions",
                         headers={
-                            "Authorization": "Bearer sk-c112lffn26o76z3sfukfvblyj5lg2hktfpp8mor8w8j2h65i",
+                            "Authorization": f"Bearer {os.getenv('XIAOMI_MIMO_API_KEY', '')}",
                             "Content-Type": "application/json",
                         },
                         json={

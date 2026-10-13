@@ -2,12 +2,22 @@
   "napcat": {
     "http_url": "http://127.0.0.1:3002",
     "ws_url": "ws://127.0.0.1:3001",
-    "access_token": "O~3GVdp9kwlCH.Zg"
+    "access_token": ""
   },
   "ai": {
     "api_key": "",
     "base_url": "https://api.deepseek.com/anthropic",
     "model": "deepseek-v4-flash"
+  },
+  "tts": {
+    "engine": "vocu",
+    "api_key": "",
+    "model": "FunAudioLLM/CosyVoice2-0.5B",
+    "timeout_seconds": 30,
+    "max_chars": 300,
+    "async_timeout_seconds": 120,
+    "async_poll_seconds": 4,
+    "default_voice_id": ""
   },
   "limits": {
     "rate_group_seconds": 15,
@@ -31,16 +41,6 @@
     "download": 3,
     "io": 4,
     "api": 6
-  },
-  "tts": {
-    "engine": "vocu",
-    "api_key": "sk-1c34ef5a2dd3fb8fb05bdf39404516e8",
-    "model": "FunAudioLLM/CosyVoice2-0.5B",
-    "timeout_seconds": 30,
-    "max_chars": 300,
-    "async_timeout_seconds": 120,
-    "async_poll_seconds": 4,
-    "default_voice_id": "505538d3-4e38-405f-ae27-a8d0db1ae99d"
   },
   "antiban": {
     "min_send_interval_seconds": 1.2,

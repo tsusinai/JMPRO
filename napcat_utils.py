@@ -17,10 +17,10 @@ import requests
 logger = logging.getLogger("jm_bot")
 
 # === NapCat 配置 ===
-NAPCAT_HTTP = "http://127.0.0.1:3002"
-NAPCAT_TOKEN = "O~3GVdp9kwlCH.Zg"
+NAPCAT_HTTP = os.getenv("NAPCAT_HTTP_URL", "http://127.0.0.1:3002")
+NAPCAT_TOKEN = os.getenv("NAPCAT_ACCESS_TOKEN", "")
 HEADERS = {
-    "Authorization": f"Bearer {NAPCAT_TOKEN}",
+    "Authorization": f"Bearer {NAPCAT_TOKEN}" if NAPCAT_TOKEN else "",
     "Content-Type": "application/json",
 }
 

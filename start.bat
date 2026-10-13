@@ -21,17 +21,15 @@ echo [1/3] NapCat...
 tasklist 2>nul | findstr /i "NapCatWinBootMain.exe" >nul
 
 if errorlevel 1 (
-
-    start "NapCat" /min /d "C:\Users\a'su's\Desktop\FileWork\NapCat.Shell.Windows.OneKey\NapCat.44498.Shell" "C:\Users\a'su's\Desktop\FileWork\NapCat.Shell.Windows.OneKey\NapCat.44498.Shell\NapCatWinBootMain.exe" 1601410002
-
-    echo   Waiting 8s...
-
-    timeout /t 8 /nobreak >nul
-
+    if defined NAPCAT_SHELL_DIR (
+        start "NapCat" /min /d "%NAPCAT_SHELL_DIR%" "%NAPCAT_SHELL_DIR%\NapCatWinBootMain.exe" %NAPCAT_QQ%
+        echo   Waiting 8s...
+        timeout /t 8 /nobreak >nul
+    ) else (
+        echo   [Notice] NAPCAT_SHELL_DIR not set. Please launch NapCat manually.
+    )
 ) else (
-
     echo   Already running.
-
 )
 
 

@@ -7,7 +7,7 @@ JM 漫画 QQ Bot — QQ 群/私聊猫娘 Bot，支持漫画下载/搜索、AI �
 同一业务有两套并行实现，改逻辑时注意是否需要两边同步：
 
 1. **Windows 本机独立 Bot**（本仓库根目录）：`jm_bot.py` 直连 NapCat WebSocket，处理 `/jm` 命令。依赖本机 GoodbyeDPI 翻墙访问 JMComic CDN。
-2. **AstrBot 插件**（`astrbot_plugin_jmcomic/`）：部署在阿里云服务器（`ssh jmbot`，118.31.184.221）的 AstrBot v4.26.6 内，运行时不需要翻墙（通过 `jm_proxy.py` + SSH 反向隧道 -R 8888 走本机代理）。
+2. **AstrBot 插件**（`astrbot_plugin_jmcomic/`）：部署在云服务器（`ssh jmbot`）的 AstrBot 内，运行时不需要翻墙（通过 `jm_proxy.py` + SSH 反向隧道 -R 8888 走本机代理）。
 
 `download.py`、`messages.py` 在根目录和插件目录各有一份，分属不同运行时，勿混改。
 

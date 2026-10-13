@@ -193,14 +193,14 @@ async def download_manga(event, album_id: str) -> str:
 
 def _upload_to_group(group_id: int, file_path: str, file_name: str) -> tuple:
     """通过 NapCat HTTP API 上传文件到 QQ 群"""
-    import requests
-    napcat_url = "http://127.0.0.1:3002"
-    token = "O~3GVdp9kwlCH.Zg"
+    import requests, os
+    napcat_url = os.getenv("NAPCAT_HTTP_URL", "http://127.0.0.1:3002")
+    token = os.getenv("NAPCAT_ACCESS_TOKEN", "")
     for attempt in range(3):
         try:
             resp = requests.post(
                 f"{napcat_url}/upload_group_file",
-                headers={"Authorization": f"Bearer {token}"},
+                headers={"Authorization": f"Bearer {token}"} if token else {},
                 json={"group_id": group_id, "file": file_path, "name": file_name},
                 timeout=600,
             )
@@ -219,14 +219,14 @@ def _upload_to_group(group_id: int, file_path: str, file_name: str) -> tuple:
 
 def _upload_to_private(user_id: str, file_path: str, file_name: str) -> tuple:
     """通过 NapCat HTTP API 上传文件到 QQ 私聊"""
-    import requests
-    napcat_url = "http://127.0.0.1:3002"
-    token = "O~3GVdp9kwlCH.Zg"
+    import requests, os
+    napcat_url = os.getenv("NAPCAT_HTTP_URL", "http://127.0.0.1:3002")
+    token = os.getenv("NAPCAT_ACCESS_TOKEN", "")
     for attempt in range(3):
         try:
             resp = requests.post(
                 f"{napcat_url}/upload_private_file",
-                headers={"Authorization": f"Bearer {token}"},
+                headers={"Authorization": f"Bearer {token}"} if token else {},
                 json={"user_id": int(user_id), "file": file_path, "name": file_name},
                 timeout=600,
             )

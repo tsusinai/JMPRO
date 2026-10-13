@@ -79,8 +79,8 @@ JmModuleConfig.DOMAIN_IMAGE_LIST = list(dict.fromkeys(
 
 # === 配置 ===
 
-NAPCAT_TOKEN = "O~3GVdp9kwlCH.Zg"
-WS_URL = f"ws://127.0.0.1:3001?access_token={NAPCAT_TOKEN}"
+NAPCAT_TOKEN = os.getenv("NAPCAT_ACCESS_TOKEN", "")
+WS_URL = os.getenv("NAPCAT_WS_URL", f"ws://127.0.0.1:3001?access_token={NAPCAT_TOKEN}")
 
 # === 常用提示文本（集中管理，方便修改风格）===
 

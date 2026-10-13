@@ -71,7 +71,7 @@ QQ 消息 → NapCat WS Server (3001) → NapCat WS Client → AstrBot aiocqhttp
     "enable": true,
     "ws_reverse_host": "127.0.0.1",
     "ws_reverse_port": 3003,
-    "ws_reverse_token": "O~3GVdp9kwlCH.Zg"
+    "ws_reverse_token": "<your_napcat_token>"
   }],
   "wake_prefix": ["/", ""],
   "admins_id": ["astrbot", "3263123370"],
@@ -93,11 +93,11 @@ NapCat 关键配置 (`onebot11_1601410002.json`)：
       "host": "127.0.0.1", "port": 3001
     }],
     "httpServers": [{
-      "host": "127.0.0.1", "port": 3002, "token": "O~3GVdp9kwlCH.Zg"
+      "host": "127.0.0.1", "port": 3002, "token": "<your_napcat_token>"
     }],
     "websocketClients": [{
       "url": "ws://127.0.0.1:3003/ws/",
-      "token": "O~3GVdp9kwlCH.Zg"
+      "token": "<your_napcat_token>"
     }]
   }
 }

@@ -1,37 +1,60 @@
-__pycache__/
-*.pyc
+# ===============================
+# 运行日志与错误堆栈
+# ===============================
 *.log
+bot.log
+download_errors.log
+
+# ===============================
+# 临时下载、媒体与生成文件
+# ===============================
+**/downloads/
 downloads/
+**/pdfs/
 pdfs/
+**/zips/
 zips/
+**/tts_cache/
+tts_cache/
+
+# 语音素材与参考音频（大文件及个人素材）
+/test_tomori.mp3
+jm_bot_v2/tts_voices/tomori/full_lines.m4a
+jm_bot_v2/tts_voices/tomori/*.mp3
+jm_bot_v2/tts_voices/tomori/*.wav
+jm_bot_v2/tts_voices/tomori/*.m4a
+
+# 登录二维码与测试图片
+*.b64
+*qrcode*.png
+*qrcode*.b64
+test_plan_*.png
+test_route_map.png
+qq_login_qr.png
+
+# 运行时临时数据与个人隐私文件
 chat_history.json
 rate_limits.json
 group_roles.json
-download_errors.log
-.claude/
-qq_qrcode*.png
-qq_qrcode*.b64
-test_plan_*.png
-test_route_map.png
-bot.log
-tts_cache/
 voice_modes.json
-qq_login_qr.png
+fluffy-moseying-perlis.md
+nul
+*.tmp
 
-# Python 隔离环境与工具缓存
-.venv/
-venv/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-
-# 本机密钥配置（已跟踪文件仍需单独处理）
+# ===============================
+# 密钥配置与环境变量
+# ===============================
 .env
 .env.*
 !.env.example
-/jm_bot_v2/config.json
+config.json
+**/config.json
+!config.example.json
+!**/config.example.json
 
-# 私有服务器备份与运行数据库
+# ===============================
+# 数据库与服务器备份
+# ===============================
 /server_backup/
 *.db
 *.db-wal
@@ -39,9 +62,27 @@ venv/
 *.sqlite
 *.sqlite3
 
-# 登录二维码与临时产物
-napcat_qrcode*.png
-napcat_qrcode*.b64
-/test_tomori.mp3
-/nul
-*.tmp
+# ===============================
+# Python 编译缓存与虚拟环境
+# ===============================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===============================
+# IDE 与编辑器配置
+# ===============================
+.zcode/
+.zcodeignore
+.claude/
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini

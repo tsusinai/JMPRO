@@ -29,11 +29,11 @@
 
 | 组件 | 版本/配置 | 位置 |
 |------|----------|------|
-| 阿里云 ECS | 2核4G, Alibaba Cloud Linux 3 (Anolis OS 8) | 118.31.184.221 |
+| 云服务器 ECS | 2核4G, Linux | `<server_host>` |
 | Python | 3.12 (uv 管理) | `/home/admin/.local/share/uv/tools/astrbot/` |
 | systemd | napcat / astrbot / bridge 三服务 + qq-watchdog.timer | `/etc/systemd/system/` |
 | SSH | ed25519 密钥, `ssh jmbot` 直连 | `~/.ssh/config` |
-| Windows 本机 | 开发环境 + GoodbyeDPI + JM 代理 | `C:\Users\a'su's\Desktop\JMPRO` |
+| Windows 本机 | 开发环境 + GoodbyeDPI + JM 代理 | 本地工作目录 |
 
 ### systemd 服务
 

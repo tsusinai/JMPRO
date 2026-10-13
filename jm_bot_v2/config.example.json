@@ -9,6 +9,16 @@
     "base_url": "https://api.deepseek.com/anthropic",
     "model": "deepseek-v4-flash"
   },
+  "tts": {
+    "engine": "vocu",
+    "api_key": "",
+    "model": "FunAudioLLM/CosyVoice2-0.5B",
+    "timeout_seconds": 30,
+    "max_chars": 300,
+    "async_timeout_seconds": 120,
+    "async_poll_seconds": 4,
+    "default_voice_id": ""
+  },
   "limits": {
     "rate_group_seconds": 15,
     "rate_global_seconds": 20,
@@ -31,16 +41,6 @@
     "download": 3,
     "io": 4,
     "api": 6
-  },
-  "tts": {
-    "engine": "vocu",
-    "api_key": "",
-    "model": "FunAudioLLM/CosyVoice2-0.5B",
-    "timeout_seconds": 30,
-    "max_chars": 300,
-    "async_timeout_seconds": 120,
-    "async_poll_seconds": 4,
-    "default_voice_id": ""
   },
   "antiban": {
     "min_send_interval_seconds": 1.2,
