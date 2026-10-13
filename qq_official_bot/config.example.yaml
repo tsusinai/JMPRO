@@ -1,0 +1,17 @@
+# QQ 官方机器人配置模板 (QQ 开放平台: https://q.qq.com/)
+appid: "102000000"           # 机器人的 AppID (开发者平台获取)
+secret: "your_app_secret"     # 机器人的 AppSecret
+sandbox: false                # 是否开启沙箱模式 (测试环境为 true，生产环境为 false)
+log_level: 20                 # 日志等级 (10: DEBUG, 20: INFO, 30: WARNING, 40: ERROR)
+
+# AI 聊天服务配置 (可选，用于 /jm ask 命令)
+ai:
+  enabled: true
+  api_key: ""                 # DeepSeek API Key (或设置环境变量 ANTHROPIC_AUTH_TOKEN)
+  base_url: "https://api.deepseek.com/anthropic"
+  model: "deepseek-v4-flash"
+
+# 内容安全过滤 (官方机器人平台会严格审查消息，建议开启格式脱敏)
+content_safety:
+  neutral_mode: true          # 中性化展示，避免包含过度成人化口吻
+  max_search_results: 5       # 每次搜索最多展示前 5 条
