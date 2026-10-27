@@ -2,7 +2,7 @@
 import asyncio
 import logging
 
-from . import state
+from . import config, state
 from .messaging import send_group_reply
 from .messages import M
 from .runtime import io_call
@@ -40,12 +40,14 @@ JM_ROLE_RE = re.compile(r"^/jm\s+role(?:\s+(\d))?$")
 JM_VOICE_RE = re.compile(r"^/jm\s+voice(?:\s+(on|off|status))?\s*$")
 
 
-async def safe_dispatch(group_id: int, raw_msg: str, reply_msg_id: int, is_private: bool = False):
+async def safe_dispatch(group_id: int, raw_msg: str, reply_msg_id: int, is_private: bool = False,
+                        image_urls: list | None = None, sender_id: int = 0, sender_role: str = ""):
     """包装 dispatch，捕获异常防止静默失败"""
     try:
         if is_private:
             state.private_chats.add(int(group_id))
-        await dispatch(group_id, raw_msg, reply_msg_id)
+        await dispatch(group_id, raw_msg, reply_msg_id, image_urls=image_urls,
+                       sender_id=sender_id, sender_role=sender_role)
     except Exception as e:
         logger.error(
             f"命令处理异常 (chat={group_id}, msg={raw_msg[:50]}): {e}",
@@ -53,8 +55,9 @@ async def safe_dispatch(group_id: int, raw_msg: str, reply_msg_id: int, is_priva
         )
 
 
-async def dispatch(group_id: int, raw_msg: str, reply_msg_id: int):
-    """根据消息内容分发到对应命令处理函数"""
+async def dispatch(group_id: int, raw_msg: str, reply_msg_id: int, image_urls: list | None = None,
+                   sender_id: int = 0, sender_role: str = ""):
+    """根据消息内容分发到对应命令处理函数（image_urls 仅 /jm ask 读图用；sender_* 供 restart 管理员校验）"""
     raw_msg = raw_msg.strip()
 
     m = JM_CACHE_CLEAN_RE.match(raw_msg)
@@ -69,7 +72,17 @@ async def dispatch(group_id: int, raw_msg: str, reply_msg_id: int):
         return
 
     if JM_RESTART_RE.match(raw_msg):
-        await misc.cmd_restart(group_id, reply_msg_id)
+        # 管理员校验：config admins 名单 / 白名单私聊号 / 群主（sender_role=owner）
+        admins = config.CONFIG.get("admins", []) or []
+        wl_private = config.CONFIG.get("whitelist", {}).get("private", []) or []
+        if sender_id and (sender_id in admins or sender_id in wl_private or sender_role == "owner"):
+            await misc.cmd_restart(group_id, reply_msg_id)
+        else:
+            await io_call(
+                send_group_reply, group_id,
+                M("restart_forbidden"),
+                reply_msg_id,
+            )
         return
 
     if JM_STOP_RE.match(raw_msg):
@@ -120,7 +133,7 @@ async def dispatch(group_id: int, raw_msg: str, reply_msg_id: int):
 
     m = JM_ASK_RE.match(raw_msg)
     if m:
-        await chat.cmd_ask(group_id, m.group(1).strip(), reply_msg_id)
+        await chat.cmd_ask(group_id, m.group(1).strip(), reply_msg_id, image_urls=image_urls)
         return
 
     m = JM_DOWNLOAD_RE.match(raw_msg)

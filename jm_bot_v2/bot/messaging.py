@@ -7,6 +7,7 @@ import os
 
 from . import napcat
 from . import antiban
+from . import faces
 from .roles import apply_role
 from . import tts as tts_mod
 
@@ -21,6 +22,33 @@ def send_group_msg(group_id: int, text: str) -> bool:
 def send_group_reply(group_id: int, text: str, reply_msg_id: int) -> bool:
     antiban.throttle_send()
     return napcat.send_group_reply(group_id, apply_role(text, group_id), reply_msg_id)
+
+
+def send_group_msg_rich(group_id: int, text: str) -> bool:
+    """不带引用的 AI 回复专用：与 send_group_reply_rich 同款表情装饰，用于分段后续段与主动插话。"""
+    antiban.throttle_send()
+    styled = apply_role(text, group_id)
+    segments = faces.decorate(styled, str(group_id))
+    if segments:
+        return napcat.send_group_msg_segments(group_id, segments)
+    return napcat.send_group_msg(group_id, styled)
+
+
+def send_group_msg_segments(group_id: int, segments: list) -> bool:
+    """不带引用的分段发送（斗图反甩用）：仅节流 + 直发，不做角色口吻注入。"""
+    antiban.throttle_send()
+    return napcat.send_group_msg_segments(group_id, segments)
+
+
+def send_group_reply_rich(group_id: int, text: str, reply_msg_id: int) -> bool:
+    """AI 回复专用：apply_role 后做表情装饰（[表情名]→Face 段、[[sticker:情绪]]→表情包图片段）；
+    无装饰命中时与 send_group_reply 行为一致"""
+    antiban.throttle_send()
+    styled = apply_role(text, group_id)
+    segments = faces.decorate(styled, str(group_id))
+    if segments:
+        return napcat.send_group_reply_segments(group_id, segments, reply_msg_id)
+    return napcat.send_group_reply(group_id, styled, reply_msg_id)
 
 
 def _voice_record_msg(file_path: str) -> list:

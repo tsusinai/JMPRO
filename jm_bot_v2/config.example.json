@@ -6,8 +6,8 @@
   },
   "ai": {
     "api_key": "",
-    "base_url": "https://api.deepseek.com/anthropic",
-    "model": "deepseek-v4-flash"
+    "base_url": "https://discovery-api.intern-ai.org.cn",
+    "model": "deepseek-v4.1-flash-1017"
   },
   "tts": {
     "engine": "vocu",
@@ -45,6 +45,62 @@
   "antiban": {
     "min_send_interval_seconds": 1.2,
     "ai_cooldown_seconds": 8,
-    "ai_max_per_minute": 10
+    "ai_max_per_minute": 10,
+    "ai_classify_per_minute": 20,
+    "ai_generate_per_minute": 6
+  },
+  "faces": {
+    "enabled": true,
+    "max_per_message": 2,
+    "cooldown_minutes": 10,
+    "cooldown_max_uses": 2,
+    "stickers_enabled": true
+  },
+  "images": {
+    "enabled": true,
+    "max_per_message": 3,
+    "max_mb": 8,
+    "timeout_seconds": 15
+  },
+  "qzone": {
+    "mode": "draft",
+    "tick_minutes": 90,
+    "max_per_day": 1,
+    "diary_hour": 20,
+    "history_hours": 6,
+    "model_timeout": 180
+  },
+  "admins": [],
+  "nl_mode": "hybrid",
+  "nl": {
+    "confidence_threshold": 0.6,
+    "confirm_timeout_seconds": 60,
+    "wake_names": [
+      "大肥鱼",
+      "肥鱼",
+      "猫娘",
+      "本喵"
+    ],
+    "busy_reply_cooldown_seconds": 60,
+    "meme_max_entries": 2,
+    "tool_loop_max": 2,
+    "think_enabled": true
+  },
+  "memory": {
+    "enabled": true,
+    "db_file": "memory.db",
+    "compress_after_messages": 90,
+    "compress_after_chars": 15000,
+    "keep_recent": 60,
+    "max_facts": 50,
+    "inject_facts": 10,
+    "compress_cooldown_seconds": 600
+  },
+  "proactive_reply": {
+    "enabled": true,
+    "sample_probability": 0.12,
+    "group_cooldown_seconds": 420,
+    "daily_max_per_group": 6,
+    "judge_min_confidence": 0.7
   }
 }

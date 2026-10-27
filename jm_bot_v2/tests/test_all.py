@@ -955,6 +955,314 @@ def test_edge_cases():
 
 
 # ============================================================
+# SECTION 7: Faces （出站表情装饰 — bot/faces.py）
+# ============================================================
+
+
+def test_faces():
+    section("Faces: decorate / pick_sticker / strip_markers")
+    from bot import faces
+
+    true("face_map 已加载且条数 >300", len(faces.FACE_MAP) > 300)
+    eq("face_map[微笑]", faces.FACE_MAP.get("微笑"), 452)
+
+    # 无标记 → None（走原纯文本路径）
+    eq("decorate 无标记返回 None", faces.decorate("普通一句话", "t-plain"), None)
+    # 字典不认的标记原样保留 → 无转换 → None
+    eq("decorate 未知标记返回 None", faces.decorate("你好[不存在的词xyz]呀", "t-unknown"), None)
+
+    # 已知表情 → text/face/text 三段
+    segs = faces.decorate("你好[微笑]呀", "t-basic")
+    true("decorate 基本转换返回段列表", isinstance(segs, list))
+    eq("基本转换段数", len(segs), 3)
+    eq("段1 text", segs[0], {"type": "text", "data": {"text": "你好"}})
+    eq("段2 face", segs[1], {"type": "face", "data": {"id": "452"}})
+    eq("段3 text", segs[2], {"type": "text", "data": {"text": "呀"}})
+
+    # 单条上限 2 张：第 3 张连标记一并丢弃
+    segs = faces.decorate("[微笑][吃瓜][旺柴]尾巴", "t-cap")
+    face_segs = [s for s in segs if s["type"] == "face"]
+    eq("单条上限 2 张", len(face_segs), 2)
+    eq("上限后保留尾巴文本", segs[-1], {"type": "text", "data": {"text": "尾巴"}})
+
+    # 冷却：同会话同脸出现在最近 2 条历史内 → 丢弃
+    s = "t-cooldown"
+    first = faces.decorate("[微笑]", s)
+    true("冷却首发成功", first and any(x["type"] == "face" for x in first))
+    second = faces.decorate("[微笑]", s)
+    true("冷却二发被丢弃", not second or not any(x["type"] == "face" for x in second))
+    third = faces.decorate("[吃瓜]和[微笑]", s)
+    ids = [x["data"]["id"] for x in third if x["type"] == "face"]
+    eq("冷却中混发只剩吃瓜", ids, ["271"])
+
+    # 表情包：标记摘除 + 末尾图片段
+    segs = faces.decorate("太好了[[sticker:开心]]", "t-sticker")
+    true("sticker 返回段列表", isinstance(segs, list))
+    eq("sticker 文本段", segs[0], {"type": "text", "data": {"text": "太好了"}})
+    eq("sticker 末段为图片", segs[-1]["type"], "image")
+    true("sticker file 为 file:///", segs[-1]["data"]["file"].startswith("file:///"))
+    true("sticker 路径含 stickers/开心",
+         "stickers" in segs[-1]["data"]["file"] and "开心" in segs[-1]["data"]["file"])
+
+    # pick_sticker：避开上一张（开心目录 7 张）
+    p1 = faces.pick_sticker("开心", "t-pick")
+    p2 = faces.pick_sticker("开心", "t-pick")
+    true("pick_sticker 两次不重样", p1 and p2 and p1 != p2)
+    eq("pick_sticker 非法情绪", faces.pick_sticker("不存在", "t-pick"), None)
+
+    # 非法 sticker 情绪：标记被摘除、无图片段
+    segs = faces.decorate("x[[sticker:不存在]]", "t-badsticker")
+    true("非法 sticker 无图片段", not segs or not any(x["type"] == "image" for x in segs))
+    if segs:
+        eq("非法 sticker 文本保留", "".join(x["data"].get("text", "") for x in segs), "x")
+
+    # strip_markers：TTS 路径
+    eq("strip 已知表情去括号", faces.strip_markers("好[微笑]呀"), "好微笑呀")
+    eq("strip 摘除 sticker 标记", faces.strip_markers("走[[sticker:开心]]"), "走")
+    eq("strip 未知标记保留", faces.strip_markers("留[xyz123]着"), "留[xyz123]着")
+
+
+# ============================================================
+# SECTION 8: Images （读图片 — runner.extract_image_urls / ai_chat.fetch_image_blocks）
+# ============================================================
+
+_PNG_1PX = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg=="
+)
+
+
+def test_images():
+    section("Images: extract_image_urls / fetch_image_blocks")
+    import base64
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    from bot.runner import extract_image_urls
+    from bot import ai_chat, config
+
+    # 段数组形态：取 image 段 url、去重、忽略其他段
+    ev = {"message": [
+        {"type": "text", "data": {"text": "看这个"}},
+        {"type": "image", "data": {"file": "a.jpg", "url": "https://cdn.example.com/a.jpg"}},
+        {"type": "face", "data": {"id": "1"}},
+        {"type": "image", "data": {"file": "b.png", "url": "https://cdn.example.com/b.png"}},
+        {"type": "image", "data": {"file": "a2.jpg", "url": "https://cdn.example.com/a.jpg"}},
+    ], "raw_message": "看这个[CQ:image,file=a.jpg]"}
+    eq("段数组提取+去重", extract_image_urls(ev),
+       ["https://cdn.example.com/a.jpg", "https://cdn.example.com/b.png"])
+
+    # 上限 3 条
+    ev4 = {"message": [{"type": "image", "data": {"url": f"https://x.com/{i}.jpg"}} for i in range(4)]}
+    eq("提取上限 3 条", len(extract_image_urls(ev4)), 3)
+
+    # CQ 回退：url 含 HTML 实体需 unescape
+    evcq = {"raw_message": "/jm ask [CQ:image,file=x.jpg,url=https://cdn.example.com/x.jpg?a=1&#44;b=2]"}
+    eq("CQ 回退提取", extract_image_urls(evcq), ["https://cdn.example.com/x.jpg?a=1,b=2"])
+
+    # 无图片
+    eq("无图片返回空", extract_image_urls({"message": [{"type": "text", "data": {"text": "hi"}}]}), [])
+
+    # fetch_image_blocks：本地 HTTP 服务
+    png_bytes = base64.b64decode(_PNG_1PX)
+
+    class _H(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path == "/ok.png":
+                self.send_response(200)
+                self.send_header("Content-Type", "image/png")
+                self.send_header("Content-Length", str(len(png_bytes)))
+                self.end_headers()
+                self.wfile.write(png_bytes)
+            else:
+                self.send_response(404)
+                self.end_headers()
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(("127.0.0.1", 0), _H)
+    port = srv.server_address[1]
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    try:
+        blocks = ai_chat.fetch_image_blocks([f"http://127.0.0.1:{port}/ok.png"])
+        eq("抓图成功 1 个 block", len(blocks), 1)
+        if blocks:
+            eq("block 类型", blocks[0]["type"], "image")
+            eq("block media_type", blocks[0]["source"]["media_type"], "image/png")
+            eq("block 数据往返", base64.b64decode(blocks[0]["source"]["data"]), png_bytes)
+        eq("404 返回空", ai_chat.fetch_image_blocks([f"http://127.0.0.1:{port}/no.png"]), [])
+        eq("非 http 返回空", ai_chat.fetch_image_blocks(["file:///etc/passwd"]), [])
+        # 超限：max_mb=0 时任何图都被丢弃
+        old = config.CONFIG.get("images", {}).get("max_mb")
+        config.CONFIG.setdefault("images", {})["max_mb"] = 0
+        try:
+            eq("超限丢弃", ai_chat.fetch_image_blocks([f"http://127.0.0.1:{port}/ok.png"]), [])
+        finally:
+            config.CONFIG["images"]["max_mb"] = old
+    finally:
+        srv.shutdown()
+
+
+# ============================================================
+# SECTION 9: QZone （发空间 — g_tk / Cookie 会话 / publish 单次 / 决策层，全 mock）
+# ============================================================
+
+def test_qzone():
+    section("QZone: g_tk / session / publish / task")
+    import bot.qzone as qz
+    import bot.qzone_task as qzt
+
+    # g_tk 已知向量（与 Zhalslar 参考实现一致）
+    eq("g_tk 向量1", qz.g_tk("testpskey123"), "802439591")
+    eq("g_tk 向量2", qz.g_tk("abc"), "193485963")
+
+    # Cookie 字符串解析
+    fields = qz._parse_cookie_string("uin=o3346134945; skey=AbCdEf; p_skey=xyz-123_ABC")
+    eq("cookie uin", fields.get("uin"), "o3346134945")
+    eq("cookie p_skey", fields.get("p_skey"), "xyz-123_ABC")
+
+    # Session：mock napcat_post，校验 uin 去 o、p_skey 回退 skey、TTL 缓存只取一次
+    calls = {"n": 0}
+
+    def fake_post(action, params=None):
+        calls["n"] += 1
+        eq("get_cookies 动作名", action, "get_cookies")
+        eq("get_cookies 域名", (params or {}).get("domain"), "user.qzone.qq.com")
+        return {"status": "ok", "retcode": 0,
+                "data": {"cookies": "uin=o3346134945; skey=SKEYONLY"}}
+
+    orig_post = qz.napcat_post
+    qz.napcat_post = fake_post
+    try:
+        sess = qz.QzoneSession(cookie_ttl=600)
+        ctx = sess.get_ctx()
+        eq("ctx uin", ctx.uin, 3346134945)
+        eq("p_skey 回退 skey", ctx.p_skey, "SKEYONLY")
+        eq("gtk2 = g_tk(p_skey)", ctx.gtk2, qz.g_tk("SKEYONLY"))
+        sess.get_ctx()
+        eq("TTL 内只取一次 Cookie", calls["n"], 1)
+        sess.invalidate()
+        sess.get_ctx()
+        eq("invalidate 后重新取", calls["n"], 2)
+    finally:
+        qz.napcat_post = orig_post
+
+    # publish：mock requests.post，成功带 tid；且只调用一次（绝不重试）
+    post_calls = {"n": 0}
+
+    class FakeResp:
+        def __init__(self, text):
+            self.text = text
+
+    def fake_requests_post(url, **kw):
+        post_calls["n"] += 1
+        eq("publish 目标 URL", url, qz.EMOTION_URL)
+        eq("publish 带 g_tk 参数", kw["params"]["g_tk"], qz.g_tk("SKEYONLY"))
+        eq("publish 表单 con", kw["data"]["con"], "今天天气不错")
+        return FakeResp('{"code": 0, "tid": "abc123tid", "message": "ok"}')
+
+    orig_req_post = qz.requests.post
+    qz.requests.post = fake_requests_post
+    try:
+        api = qz.QzoneAPI(sess)
+        res = api.publish("今天天气不错")
+        true("publish 成功 ok", res["ok"] is True)
+        eq("publish tid", res["tid"], "abc123tid")
+        eq("publish 只发一次", post_calls["n"], 1)
+
+        # 无 tid → 未确认，且仍只发一次
+        def fake_no_tid(url, **kw):
+            post_calls["n"] += 1
+            return FakeResp('{"code": 0, "message": "ok"}')
+
+        qz.requests.post = fake_no_tid
+        res2 = api.publish("今天天气不错")
+        true("无 tid 视为未确认", res2["ok"] is False and res2["tid"] is None)
+        eq("无 tid 也不重试", post_calls["n"], 2)
+    finally:
+        qz.requests.post = orig_req_post
+
+    # 决策层：collect_recent_history 只取白名单会话
+    import bot.ai_chat as ai_chat_mod
+    orig_hist = dict(ai_chat_mod._chat_history)
+    orig_qzt_hist = qzt._chat_history
+    try:
+        fake_hist = {
+            111: [("群友", "今天去吃火锅了"), ("本喵", "听起来不错")],
+            999: [("群友", "名单外秘密")],
+        }
+        ai_chat_mod._chat_history = fake_hist
+        qzt._chat_history = fake_hist
+        import bot.config as cfg_mod
+        orig_wl = cfg_mod.CONFIG.get("whitelist")
+        cfg_mod.CONFIG["whitelist"] = {"enabled": True, "groups": [111], "private": []}
+        try:
+            text = qzt.collect_recent_history()
+            true("历史含白名单内容", "火锅" in text)
+            true("历史不含名单外内容", "名单外" not in text)
+        finally:
+            cfg_mod.CONFIG["whitelist"] = orig_wl
+    finally:
+        ai_chat_mod._chat_history = orig_hist
+        qzt._chat_history = orig_qzt_hist
+
+    # 决策层：decide_post 解析模型 JSON；乱码回退不发
+    class FakeBlock:
+        def __init__(self, t):
+            self.text = t
+
+    class FakeRespObj:
+        def __init__(self, t):
+            self.content = [FakeBlock(t)]
+
+    class FakeMessages:
+        def __init__(self, t):
+            self._t = t
+
+        def create(self, **kw):
+            return FakeRespObj(self._t)
+
+    class FakeClient:
+        def __init__(self, t):
+            self.messages = FakeMessages(t)
+
+    orig_client = qzt._get_client
+    try:
+        qzt._get_client = lambda: FakeClient('{"publish": true, "text": "今天的火锅局太快乐了，必须记录一下这份热闹"}')
+        d = qzt.decide_post("一些聊天")
+        true("decide 解析 publish", d.get("publish") is True and "火锅" in d.get("text", ""))
+        qzt._get_client = lambda: FakeClient('这不是JSON')
+        d2 = qzt.decide_post("一些聊天")
+        true("decide 乱码不发", d2.get("publish") is False)
+    finally:
+        qzt._get_client = orig_client
+
+    # 状态与草稿：临时目录往返
+    import os
+    import tempfile
+    orig_state, orig_drafts = qzt.STATE_FILE, qzt.DRAFTS_DIR
+    with tempfile.TemporaryDirectory() as td:
+        qzt.STATE_FILE = os.path.join(td, "state.json")
+        qzt.DRAFTS_DIR = os.path.join(td, "drafts")
+        try:
+            qzt._update_state(post_count_today=1, last_post_date="2026-10-24")
+            st = qzt._get_state()
+            eq("状态往返计数", st["post_count_today"], 1)
+            eq("状态默认值补齐", st["last_diary_date"], "")
+            qzt.save_draft("say", "一条测试草稿说说")
+            files = os.listdir(qzt.DRAFTS_DIR)
+            true("草稿文件已落盘", any(f.endswith("-say.txt") for f in files))
+            true("草稿日志已追加", "drafts.log" in files)
+        finally:
+            qzt.STATE_FILE, qzt.DRAFTS_DIR = orig_state, orig_drafts
+
+    # 默认模式必须是 draft（风控底线）
+    import bot.config as cfg_mod
+    eq("qzone 默认 mode=draft", cfg_mod.CONFIG["qzone"]["mode"], "draft")
+    eq("qzone 每日硬顶", cfg_mod.CONFIG["qzone"]["max_per_day"], 1)
+
+
+# ============================================================
 # Main runner
 # ============================================================
 
@@ -994,6 +1302,15 @@ def main():
 
     # Section 5: Edge cases
     test_edge_cases()
+
+    # Section 7: Faces
+    test_faces()
+
+    # Section 8: Images
+    test_images()
+
+    # Section 9: QZone
+    test_qzone()
 
     # Summary
     print(f"\n{'=' * 60}")

@@ -142,24 +142,27 @@ class ProgressDownloader(jmcomic.JmDownloader):
                 f"5 分钟未下载到任何图片，CDN 可能不可达，请稍后重试"
             )
         if gap > self.STALL_SECONDS:
-            if self._stall_start == 0:
-                self._stall_start = now
-            total_stall = now - self._stall_start
-            # 尝试切换 CDN 域名
-            if self._domain_switches < self.MAX_DOMAIN_SWITCHES and total_stall <= self.MAX_STALL_TIME:
-                self._switch_domain(image)
-                self._domain_switches += 1
-                self._last_image_time = now  # 给新域名一个机会
-                logger.warning(
-                    f"下载卡死检测: {gap:.0f}s 无进度，切换 CDN "
-                    f"(第{self._domain_switches}次，累计卡死{total_stall:.0f}s)"
-                )
-            # 累计超时则报错
-            if total_stall > self.MAX_STALL_TIME:
-                raise RuntimeError(
-                    f"下载长时间无响应（>3分钟），已切换{self._domain_switches}次服务器均失败，"
-                    f"请稍后重试"
-                )
+            # 卡死状态（_stall_start/_domain_switches/_switched_domains）多线程共享，
+            # 与 after_image 共用 _counter_lock 串行化，避免并发重复切换/计数竞态
+            with self._counter_lock:
+                if self._stall_start == 0:
+                    self._stall_start = now
+                total_stall = now - self._stall_start
+                # 尝试切换 CDN 域名
+                if self._domain_switches < self.MAX_DOMAIN_SWITCHES and total_stall <= self.MAX_STALL_TIME:
+                    self._switch_domain(image)
+                    self._domain_switches += 1
+                    self._last_image_time = now  # 给新域名一个机会
+                    logger.warning(
+                        f"下载卡死检测: {gap:.0f}s 无进度，切换 CDN "
+                        f"(第{self._domain_switches}次，累计卡死{total_stall:.0f}s)"
+                    )
+                # 累计超时则报错
+                if total_stall > self.MAX_STALL_TIME:
+                    raise RuntimeError(
+                        f"下载长时间无响应（>3分钟），已切换{self._domain_switches}次服务器均失败，"
+                        f"请稍后重试"
+                    )
 
         super().before_image(image, img_save_path)
 
@@ -311,18 +314,17 @@ def download_single(album_id: str, progress_callback=None, cancel_check=None, ou
 
     _downloader = None
     try:
-        os.chdir(config.BASE_DIR)
-
         if cancel_check and cancel_check():
             result["status"] = "cancelled"
             result["error"] = "用户取消了下载"
             return result
 
-        # 加载配置
+        # 加载配置（下载根目录绝对化，不再依赖 os.chdir 提供相对基准）
         if os.path.exists(config.OPTION_FILE):
             option = jmcomic.create_option_by_file(config.OPTION_FILE)
         else:
             option = jmcomic.JmOption.default()
+        option.dir_rule.base_dir = config.DOWNLOADS_DIR
 
         # 使用 Feature 系统选择输出格式（替代手动插件操作）
         if output_format == "zip":
@@ -558,8 +560,6 @@ def format_result(result: dict) -> str:
 
 
 def main():
-    os.chdir(config.BASE_DIR)
-
     if len(sys.argv) < 2:
         print("用法: python -m bot.downloader <漫画ID> [漫画ID ...] [--group <群号>]")
         print("示例: python -m bot.downloader 422866 --group 761064152")
@@ -573,7 +573,6 @@ def main():
         if idx + 1 < len(args):
             group_id = args[idx + 1]
             args = args[:idx] + args[idx + 2:]
-    os.environ["JM_GROUP_ID"] = group_id
 
     album_ids = args
 
