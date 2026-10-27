@@ -11,10 +11,9 @@ from . import config
 
 logger = logging.getLogger("jm_bot")
 
-HEADERS = {
-    "Authorization": f"Bearer {config.NAPCAT_TOKEN}",
-    "Content-Type": "application/json",
-}
+HEADERS = {"Content-Type": "application/json"}
+if config.NAPCAT_TOKEN:
+    HEADERS["Authorization"] = f"Bearer {config.NAPCAT_TOKEN}"
 
 # 避免 Windows 系统代理劫持 localhost 请求
 os.environ["NO_PROXY"] = "localhost,127.0.0.1"
@@ -62,6 +61,33 @@ def send_group_reply(group_id: int, text: str, reply_msg_id: int) -> bool:
     return ok
 
 
+def send_group_msg_segments(group_id: int, segments: list) -> bool:
+    """发送分段消息（text/face/image 等 OneBot 段）到群"""
+    data = napcat_post("send_group_msg", {"group_id": group_id, "message": segments})
+    ok = data.get("retcode") == 0 or data.get("status") == "ok"
+    if not ok:
+        logger.warning(f"send_group_msg_segments 失败: {data}")
+    return ok
+
+
+def send_group_reply_segments(group_id: int, segments: list, reply_msg_id: int) -> bool:
+    """发送引用回复（分段消息）到群"""
+    msg = [
+        {"type": "reply", "data": {"id": str(reply_msg_id)}},
+        *segments,
+    ]
+    data = napcat_post("send_group_msg", {"group_id": group_id, "message": msg})
+    ok = data.get("retcode") == 0 or data.get("status") == "ok"
+    if not ok:
+        logger.warning(f"send_group_reply_segments 失败: {data}")
+    return ok
+
+
+def get_cookies(domain: str) -> dict:
+    """取指定域的登录 Cookie（QQ 空间发布层用）；返回 NapCat 原始响应"""
+    return napcat_post("get_cookies", {"domain": domain})
+
+
 def _upload(endpoint: str, payload: dict, file_name: str) -> Tuple[bool, str]:
     last_error = ""
     for attempt in range(3):
@@ -82,14 +108,17 @@ def _upload(endpoint: str, payload: dict, file_name: str) -> Tuple[bool, str]:
             ok = data.get("retcode") == 0 or data.get("status") == "ok"
             detail = "ok" if ok else (data.get("message") or data.get("wording") or str(data))
             if not ok:
+                last_error = detail
                 logger.warning(
                     f"上传失败: file={file_name} "
                     f"retcode={data.get('retcode')} msg={data.get('message')} "
                     f"wording={data.get('wording')} raw={json.dumps(data, ensure_ascii=False)[:300]}"
                 )
+                if attempt < 2:
+                    time.sleep(2 * (attempt + 1))
             else:
                 logger.info(f"上传成功: file={file_name}")
-            return ok, detail
+                return True, detail
         except requests.exceptions.RequestException as e:
             last_error = str(e)
             logger.warning(f"上传请求异常 (attempt {attempt+1}/3): {e}")

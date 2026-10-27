@@ -45,6 +45,7 @@ def get_jm_client():
                         option = jmcomic.create_option_by_file(config.OPTION_FILE)
                     else:
                         option = jmcomic.JmOption.default()
+                    option.dir_rule.base_dir = config.DOWNLOADS_DIR
                     _jm_client = option.build_jm_client()
     return _jm_client
 
